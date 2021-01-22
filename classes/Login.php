@@ -50,11 +50,8 @@ class Login
         } elseif (empty($_POST['user_password'])) {
             $this->errors[] = "Password field was empty.";
         } elseif (!empty($_POST['user_email']) && !empty($_POST['user_password'])) {
-            // create a database connection, using the constants from config/db.php (which we loaded in index.php)
             $this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-            // change character set to utf8 and check it
             if (!$this->db_connection->set_charset("utf8")) {
-//                $this->errors[] = $this->db_connection->error;
                 error_log($this->db_connection->error);
             }
 
@@ -83,6 +80,7 @@ class Login
                     }
                 } else {
                     $this->errors[] = "This user does not exist.";
+                    echo json_encode(array(['status'=>"error", 'message'=>'This user does not exist']));
                 }
             } else {
                 $this->errors[] = "Database connection problem.";

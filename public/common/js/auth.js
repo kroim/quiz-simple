@@ -82,7 +82,6 @@ $('#register_account').on('submit', function (e) {
 });
 $('#login_account').on('submit', function (e) {
     e.preventDefault();
-    console.log("Login Submit...");
     let APP_URL = $('meta[name="_base_url"]').attr('content');
     let url = APP_URL + '/index.php';
     let login_email = $('#login_email').val();
@@ -90,18 +89,15 @@ $('#login_account').on('submit', function (e) {
         customAlert(auth_messages[2]);
         return;
     }
-    console.log("Login Email: ", login_email);
     if (login_email.indexOf('@') < 0) {
         customAlert(auth_messages[3]);
         return;
     }
-    console.log("Login Email1: ", login_email);
     var login_password = $('#login_password').val();
     if (login_password === '') {
         customAlert(auth_messages[5]);
         return;
     }
-    console.log("Login Password: ", login_password);
     var data = {
         login: "Login",
         user_email: login_email,

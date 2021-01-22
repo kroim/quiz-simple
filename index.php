@@ -1,19 +1,9 @@
 <?php
-
-// include the configs / constants for the database connection
-require_once("config/db.php");
-
-// load the login class
-require_once("classes/Login.php");
-// load the registration class
-require_once("classes/Registration.php");
-$login = new Login();
-
-$currDir = dirname(__FILE__);
-include("$currDir/views/partials/head.php");
-// ... ask if we are logged in here:
-if ($login->isUserLoggedIn() == true) {
-    include("views/logged_in.php");
+include "config/db.php";
+if (isset($_SESSION['user']) && $_SESSION['user']['login'] == 1) {
+    var_dump("Home routes");
+    include_once "routes/home_routes.php";
 } else {
-    include("views/not_logged_in.php");
+    var_dump("Auth routes");
+    include_once "routes/auth_routes.php";
 }

@@ -20,15 +20,35 @@ class AuthController
 
     public function postLogin($request)
     {
+        $email = $request['email'];
+        if (!$email) {
+            echo json_encode(['status'=>'error', 'message'=>'Email is required']);
+            die();
+        }
+        $checkUser = $this->authModel->checkUserEmail($email);
+        if (!$checkUser) {
+            echo json_encode(['status'=>'error', 'message'=>'The email is not registered']);
+            die();
+        }
+        $password = $request['password'];
+        if (!$password) {
+            echo json_encode(['status'=>'error', 'message'=>'Password is required']);
+            die();
+        }
+        $identifyUser = $this->authModel->identifyUser($email, $password);
+        if (!$identifyUser) {
+            echo json_encode(['status'=>'error', 'message'=>'The password is wrong']);
+            die();
+        }
         $user = (object) array(
-            "name"=>"Wonder",
-            "email"=>"wonder@test.com",
-            "role"=>2,
-            "login_status"=>1
+            "name"=>$identifyUser['name'],
+            "email"=>$identifyUser['email'],
+            "role"=>$identifyUser['role'],
         );
         $_SESSION['user'] = serialize($user);
         $_SESSION['login'] = 1;
-        echo "Login post".$_SESSION['user'];
+        echo json_encode(['status'=>'success', 'message'=>'Login is success']);
+        die();
     }
 
     public function getRegister()
@@ -57,7 +77,7 @@ class AuthController
         $role = $request['role'];
         $role_number = 3;
         if ($role == "Teacher") $role_number = 2;
-        $checkUser = $this->authModel->checkUser($email);
+        $checkUser = $this->authModel->checkUserEmail($email);
         if ($checkUser) {
             echo json_encode(['status'=>'error', 'message'=>'The email is registered already']);
             die();

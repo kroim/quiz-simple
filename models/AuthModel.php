@@ -22,10 +22,22 @@ class AuthModel
         return mysqli_query($this->conn, $sql);
     }
 
-    public function checkUser($email) {
+    public function checkUserEmail($email) {
         $sql = "select * from users where email='" . $email . "'";
         $select = mysqli_query($this->conn, $sql);
         if (mysqli_num_rows($select)) return true;  // exist email already
         return false;  // don't exist email
+    }
+
+    public function identifyUser($email, $password)
+    {
+        $sql = "select * from users where email='" . $email . "' limit 1";
+        $select = mysqli_query($this->conn, $sql);
+        if ($row = $select->fetch_assoc()) {
+            $password_hash = $row['password'];
+            if(password_verify($password, $password_hash)) {
+                return $row;
+            } else return null;
+        } else return null;
     }
 }

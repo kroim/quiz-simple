@@ -1,7 +1,6 @@
 $('#register_account').on('submit', function (e) {
     e.preventDefault();
     let base_url = $('meta[name="_base_url"]').attr('content');
-    console.log(base_url);
     let url = base_url + '/register';
     let register_name = $('#register_name').val();
     if (register_name === '') {
@@ -59,8 +58,8 @@ $('#register_account').on('submit', function (e) {
 });
 $('#login_account').on('submit', function (e) {
     e.preventDefault();
-    let APP_URL = $('meta[name="_base_url"]').attr('content');
-    let url = APP_URL + '/index.php';
+    let base_url = $('meta[name="_base_url"]').attr('content');
+    let url = base_url + '/login';
     let login_email = $('#login_email').val();
     if (login_email === '') {
         customAlert(auth_messages[2]);
@@ -76,20 +75,20 @@ $('#login_account').on('submit', function (e) {
         return;
     }
     let data = {
-        login: "Login",
-        user_email: login_email,
-        user_password: login_password
+        email: login_email,
+        password: login_password
     };
     $.ajax({
         url: url,
         method: 'post',
         data: data,
         success: function (res) {
-            console.log(res);
+            res = JSON.parse(res);
             if (res.status === 'success') {
                 customAlert(res.message, true);
-                $('#login_modal').modal('toggle');
-                location.href = APP_URL + '/user/my-account'
+                setTimeout(function () {
+                    location.href = base_url;
+                }, 2000);
             } else customAlert(res.message);
         }
     })

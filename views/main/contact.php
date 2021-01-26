@@ -1,12 +1,12 @@
 <?php
 
-class Login {
+class Contact {
     public function __construct(){
-        echo "This is the login page" . '<br/>';
+        echo "This is the contact page";
         // $this->_other();
     }
 
     protected function _other() {
-        echo "This is the login route.";
+        echo "This is the contact route";
     }
 }

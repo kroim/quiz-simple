@@ -1,16 +1,18 @@
 <?php
-//session_start();
-include "./views/auth/login.php";
 
 class AuthController
 {
+    private $base_url;
     public function __construct()
     {
+        $parsed = parse_ini_file('.env', true);
+        $this->base_url = $parsed["base_url"];
     }
 
     public function getLogin()
     {
-        echo "Login Page";
+        $base_url = $this->base_url;
+        require_once __DIR__ . '/../views/auth/login.php';
     }
 
     public function postLogin($request)
@@ -28,7 +30,8 @@ class AuthController
 
     public function getRegister()
     {
-        echo "Register page";
+        $base_url = $this->base_url;
+        require_once __DIR__ . "/../views/auth/register.php";
     }
 
     public function postRegister($request)
@@ -38,7 +41,8 @@ class AuthController
 
     public function getForgotPassword()
     {
-        echo "Forgot password page";
+        $base_url = $this->base_url;
+        require_once __DIR__ . "/../views/auth/forgot-password.php";
     }
 
     public function postForgotPassword($request)
@@ -48,7 +52,8 @@ class AuthController
 
     public function getResetPassword()
     {
-        echo "Reset password page";
+        $base_url = $this->base_url;
+        require_once __DIR__ . "/../views/auth/reset-password.php";
     }
 
     public function postResetPassword($request)

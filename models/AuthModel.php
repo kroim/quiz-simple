@@ -40,4 +40,10 @@ class AuthModel
             } else return null;
         } else return null;
     }
+
+    public function changeUserStatus($email) {
+        $sql = "update users set login_status=1 where email='" . $email . "'";
+        mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+    }
 }

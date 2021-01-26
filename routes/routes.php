@@ -61,5 +61,8 @@ class Routes
         $this->route->get("/contact", function () {
             $this->main->contact();
         });
+        $this->route->get("/logout", function () {
+            $this->main->logout();
+        });
     }
 }

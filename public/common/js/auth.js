@@ -1,35 +1,14 @@
-function goToModal(item) {
-    if (item === 'login') {
-        $('#register_modal').modal('toggle');
-        $('#login_modal').modal('show');
-    } else if (item === 'register') {
-        $('#login_modal').modal('toggle');
-        $('#register_modal').modal('show');
-    } else if (item === 'forgot') {
-        $('#login_modal').modal('toggle');
-        $('#forgot_password_modal').modal('show');
-    } else if (item === 'forgot-login') {
-        $('#forgot_password_modal').modal('toggle');
-        $('#login_modal').modal('show');
-    }
-}
-function user_login() {
-    $('#login_modal').modal('show');
-    $('.main_nav').addClass('hide').removeClass('show');
-}
-function user_register() {
-    $('#register_modal').modal('show');
-    $('.main_nav').addClass('hide').removeClass('show');
-}
 $('#register_account').on('submit', function (e) {
     e.preventDefault();
-    var url = '/register';
-    var register_name = $('#register_name').val();
+    let base_url = $('meta[name="_base_url"]').attr('content');
+    console.log(base_url);
+    let url = base_url + '/register';
+    let register_name = $('#register_name').val();
     if (register_name === '') {
         customAlert(auth_messages[0]);
         return;
     }
-    var register_email = $('#register_email').val();
+    let register_email = $('#register_email').val();
     if (register_email === '') {
         customAlert(auth_messages[2]);
         return;
@@ -38,7 +17,7 @@ $('#register_account').on('submit', function (e) {
         customAlert(auth_messages[3]);
         return;
     }
-    var register_password = $('#register_password').val();
+    let register_password = $('#register_password').val();
     if (register_password === '') {
         customAlert(auth_messages[5]);
         return;
@@ -47,7 +26,7 @@ $('#register_account').on('submit', function (e) {
         customAlert(auth_messages[7]);
         return;
     }
-    var register_confirm_password = $('#register_confirm_password').val();
+    let register_confirm_password = $('#register_confirm_password').val();
     if (register_confirm_password === '') {
         customAlert(auth_messages[8]);
         return;
@@ -56,10 +35,8 @@ $('#register_account').on('submit', function (e) {
         customAlert(auth_messages[9]);
         return;
     }
-    var register_role = $('#register_role').val();
-    var _token = $('#register_account input[name=_token]').val();
-    var data = {
-        _token: _token,
+    let register_role = $('#register_role').val();
+    let data = {
         name: register_name,
         email: register_email,
         password: register_password,
@@ -70,11 +47,11 @@ $('#register_account').on('submit', function (e) {
         method: 'post',
         data: data,
         success: function (res) {
-            console.log(res);
+            res = JSON.parse(res);
             if (res.status === 'success') {
                 customAlert(res.message, true);
                 setTimeout(function () {
-                    location.reload()
+                    location.href = base_url + "/login";
                 }, 2500)
             } else customAlert(res.message);
         }
@@ -93,12 +70,12 @@ $('#login_account').on('submit', function (e) {
         customAlert(auth_messages[3]);
         return;
     }
-    var login_password = $('#login_password').val();
+    let login_password = $('#login_password').val();
     if (login_password === '') {
         customAlert(auth_messages[5]);
         return;
     }
-    var data = {
+    let data = {
         login: "Login",
         user_email: login_email,
         user_password: login_password
@@ -126,4 +103,4 @@ $('#forgot_password_account').on('submit', function (e) {
     }
     let _token = $('#forgot_password_account input[name="_token"]').val();
     console.log(forgot_email, _token);
-})
+});

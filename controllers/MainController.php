@@ -15,11 +15,11 @@ class MainController
     public function check_session()
     {
         if (isset($_SESSION['user'])) {
-            print_r($_SESSION['user']);
-            print_r($_SESSION['login']);
-            print_r("Home routes");
+//            print_r($_SESSION['user']);
+//            print_r($_SESSION['login']);
+//            print_r("Home routes");
         } else {
-            print_r("Auth routes");
+//            print_r("Auth routes");
             header("location: {$this->base_url}/login");
         }
     }
@@ -31,10 +31,12 @@ class MainController
     }
     public function about()
     {
+        $this->check_session();
         echo "About Page";
     }
     public function contact()
     {
+        $this->check_session();
         echo "Contact Page";
     }
 }

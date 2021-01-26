@@ -44,4 +44,8 @@ class Database {
         }
         return true;
     }
+
+    public function connection() {
+        return $this->conn;
+    }
 }

@@ -1,12 +1,15 @@
 <?php
+include "models/AuthModel.php";
 
 class AuthController
 {
     private $base_url;
+    private $authModel;
     public function __construct()
     {
         $parsed = parse_ini_file('.env', true);
         $this->base_url = $parsed["base_url"];
+        $this->authModel = new AuthModel();
     }
 
     public function getLogin()
@@ -36,7 +39,37 @@ class AuthController
 
     public function postRegister($request)
     {
-        echo "Register post";
+        $name = $request['name'];
+        if (!$name) {
+            echo json_encode(['status'=>'error', 'message'=>'Name is required']);
+            die();
+        }
+        $email = $request['email'];
+        if (!$email) {
+            echo json_encode(['status'=>'error', 'message'=>'Email is required']);
+            die();
+        }
+        $password = $request['password'];
+        if (!$password) {
+            echo json_encode(['status'=>'error', 'message'=>'Password is required']);
+            die();
+        }
+        $role = $request['role'];
+        $role_number = 3;
+        if ($role == "Teacher") $role_number = 2;
+        $checkUser = $this->authModel->checkUser($email);
+        if ($checkUser) {
+            echo json_encode(['status'=>'error', 'message'=>'The email is registered already']);
+            die();
+        }
+        $registerRes = $this->authModel->createUser($name, $email, $password, $role_number);
+        if ($registerRes) {
+            echo json_encode(['status'=>'success', 'message'=>'Register is success']);
+            die();
+        } else {
+            echo json_encode(['status'=>'error', 'message'=>'Register is failed']);
+            die();
+        }
     }
 
     public function getForgotPassword()

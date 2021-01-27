@@ -17,8 +17,9 @@ class AuthModel
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
-        $sql = "insert into users (name, email, password, role, created_at, updated_at) values ('"
-            . $name ."', '" . $email . "', '" . $password_hash . "', '" . $role . "', '" . $created_at . "', '" . $updated_at . "')";
+        $avatar = "/uploads/avatar/avatar-default-icon.png";
+        $sql = "insert into users (name, email, password, role, avatar, created_at, updated_at) values ('"
+            . $name ."', '" . $email . "', '" . $password_hash . "', '" . $role . "', '" . $avatar . "', '" . $created_at . "', '" . $updated_at . "')";
         return mysqli_query($this->conn, $sql);
     }
 

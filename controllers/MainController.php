@@ -27,17 +27,35 @@ class MainController
     public function home()
     {
         $this->check_session();
-        echo "Home Page";
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "dashboard";
+        $sidebar->sub_menu = "";
+        require_once __DIR__ . '/../views/main/home.php';
     }
-    public function about()
+    public function manageRole()
     {
         $this->check_session();
         echo "About Page";
     }
-    public function contact()
+    public function manageTeachers()
     {
         $this->check_session();
-        echo "Contact Page";
+        echo "About Page";
+    }
+    public function manageStudents()
+    {
+        $this->check_session();
+        echo "About Page";
+    }
+    public function account()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "account";
+        $sidebar->sub_menu = "";
+        require_once __DIR__ . '/../views/main/account.php';
     }
     public function logout()
     {

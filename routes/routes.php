@@ -55,11 +55,17 @@ class Routes
         $this->route->get("/", function () {
             $this->main->home();
         });
-        $this->route->get("/about", function () {
-            $this->main->about();
+        $this->route->get("/user-role", function () {
+            $this->main->manageRole();
         });
-        $this->route->get("/contact", function () {
-            $this->main->contact();
+        $this->route->get("/user-teachers", function () {
+            $this->main->manageTeachers();
+        });
+        $this->route->get("/user-students", function () {
+            $this->main->manageStudents();
+        });
+        $this->route->get("/account", function () {
+            $this->main->account();
         });
         $this->route->get("/logout", function () {
             $this->main->logout();

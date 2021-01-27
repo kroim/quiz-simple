@@ -10,7 +10,7 @@ include(PREPEND_PATH."views/partials/header.php");
 <section class="content">
     <div class="content__inner">
         <header class="content__title">
-            <h1>{{__('global.side.my_account')}}</h1>
+            <h1>My Account</h1>
         </header>
 
         <div class="card">

@@ -42,9 +42,10 @@ class AuthController
         }
         $_SESSION['user_name'] = $identifyUser['name'];
         $_SESSION['user_email'] = $identifyUser['email'];
+        $_SESSION['user_role'] = $identifyUser['role'];
         $_SESSION['user_avatar'] = $identifyUser['avatar'];
         $_SESSION['user_status'] = 1;
-        $this->authModel->changeUserStatus($email, 1);
+        $this->authModel->changeUserStatus($email);
         echo json_encode(['status'=>'success', 'message'=>'Login is success']);
         die();
     }

@@ -22,12 +22,12 @@
     </div>
 
     <div class="logo d-sm-inline-flex">
-        <a href="/" style="font-size: 20px; padding-left: 45px;">Quiz-Juliano</a>
+        <a href="<?php echo $base_url; ?>" style="font-size: 20px; padding-left: 45px;">Quiz-Juliano</a>
     </div>
 
     <ul class="top-nav">
         <li class="d-none d-sm-inline-block">
-            <a href="<?php echo PREPEND_PATH; ?>index.php?logout">
+            <a href="<?php echo $base_url; ?>/logout">
                 <i class="zwicon-sign-out"></i><label>Logout</label>
             </a>
         </li>

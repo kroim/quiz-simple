@@ -23,7 +23,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 <div class="card-body">
                     <div style="display: inline-block; width: 100%;">
                         <h4 class="card-title" style="display: inline-block">Main categories</h4>
-                        <button class="btn btn-success btn-sm" onclick="addMainCategoy()" style="display: inline-block; float: right">Add</button>
+                        <button class="btn btn-success btn-sm" onclick="$('#modal_add_main_category').modal()" style="display: inline-block; float: right">Add</button>
                     </div>
                     <div class="table-responsive data-table">
                         <table id="main-table" class="table table-bordered">
@@ -56,7 +56,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 <div class="card-body">
                     <div style="display: inline-block; width: 100%;">
                         <h4 class="card-title" style="display: inline-block">Sub categories</h4>
-                        <button class="btn btn-success btn-sm" onclick="addSubCategoy()" style="display: inline-block; float: right">Add</button>
+                        <button class="btn btn-success btn-sm" onclick="$('#modal_add_sub_category').modal()" style="display: inline-block; float: right">Add</button>
                     </div>
                     <div class="table-responsive data-table">
                         <table id="sub-table" class="table table-bordered">
@@ -73,9 +73,10 @@ include(PREPEND_PATH . "views/partials/header.php");
                                 <tr id="user_{{ $user->id }}">
                                     <td class="user-number"><?php echo $sub_categories[$j]['id']; ?></td>
                                     <td class="user-name"><?php echo $sub_categories[$j]['name']; ?></td>
-                                    <td class="user-name"><?php echo $sub_categories[$j]['category_id']; ?></td>
+                                    <td class="user-name"><?php echo $sub_categories[$j]['category_name']; ?></td>
                                     <td class="user-action">
-                                        <button class="btn btn-warning btn-sm" onclick="editSubCategoy(<?php echo $sub_categories[$j]['id']; ?>)">Edit</button>
+                                        <button class="btn btn-warning btn-sm"
+                                                onclick="editSubCategoy(<?php echo $sub_categories[$j]['id']; ?>, <?php echo $sub_categories[$j]['category_id']; ?>)">Edit</button>
                                         <button class="btn btn-danger btn-sm" onclick="removeSubCategoy(<?php echo $sub_categories[$j]['id']; ?>)">Remove</button>
                                     </td>
                                 </tr>
@@ -88,7 +89,104 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </section>
-
+<!-- add a main category modal -->
+<div class="modal fade" id="modal_add_main_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add a main category</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input class="form-control" type="text" id="modal_main_category_name">
+                </div>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-link" onclick="addMainCategory()">Add a category</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add a sub category modal -->
+<div class="modal fade" id="modal_add_sub_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add a sub category</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input class="form-control" type="text" id="modal_sub_category_name">
+                </div>
+                <div class="form-group">
+                    <label>Main Category</label>
+                    <select class="form-control page-select" id="modal_add_sub_category_parent">
+                        <?php for ($k = 0; $k < count($categories); $k++) { ?>
+                            <option value="<?php echo $categories[$k]['id'] ?>"><?php echo $categories[$k]['name'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-link" onclick="addSubCategory()">Add a sub category</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit a main category modal -->
+<div class="modal fade" id="modal_edit_main_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Edit a main category</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal_edit_main_category_id">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input class="form-control" type="text" id="modal_edit_main_category_name">
+                </div>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-link" onclick="editSubCategoryBtn()">Add a sub category</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit a sub category modal -->
+<div class="modal fade" id="modal_edit_sub_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Edit a sub category</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal_edit_sub_category_id">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input class="form-control" type="text" id="modal_edit_sub_category_name">
+                </div>
+                <div class="form-group">
+                    <label>Main Category</label>
+                    <select class="form-control page-select" id="modal_edit_sub_category_parent">
+                        <?php for ($k = 0; $k < count($categories); $k++) { ?>
+                            <option value="<?php echo $categories[$k]['id'] ?>"><?php echo $categories[$k]['name'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-link" onclick="editSubCategoryBtn()">Add a sub category</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include(PREPEND_PATH . "views/partials/footer.php"); ?>
 <?php include(PREPEND_PATH . "views/partials/foot.php"); ?>
 <script>
@@ -102,6 +200,52 @@ include(PREPEND_PATH . "views/partials/header.php");
             sDom: '<"dataTables__top"flB<"dataTables_actions">>rt<"dataTables__bottom"ip><"clear">',
         });
     });
+    function addMainCategory() {
+        let base_url = $('meta[name="_base_url"]').attr('content');
+        let url = base_url + "/user-categories";
+        let name = $('#modal_main_category_name').val();
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: {
+                action: "add_main_category",
+                name: name
+            },
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
+                } else customAlert(res.message);
+            }
+        })
+    }
+    function addSubCategory() {
+        let base_url = $('meta[name="_base_url"]').attr('content');
+        let url = base_url + "/user-categories";
+        let name = $('#modal_sub_category_name').val();
+        let category = $('#modal_add_sub_category_parent').val();
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: {
+                action: "add_sub_category",
+                name: name,
+                category: category,
+            },
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
+                } else customAlert(res.message);
+            }
+        })
+    }
 </script>
 </body>
 </html>

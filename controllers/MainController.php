@@ -73,7 +73,26 @@ class MainController
 
     public function postManageCategories($request)
     {
-        echo "Post ManageTeachers";
+        $action = $request["action"];
+        switch ($action) {
+            case "add_main_category":
+                $name = $request["name"];
+                $add_action = $this->mainModel->addMainCategory($name);
+                if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a main category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed a main category"]);
+                break;
+            case "add_sub_category":
+                $name = $request["name"];
+                $category = $request["category"];
+                $add_action = $this->mainModel->addSubCategory($name, $category);
+                if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a sub category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed a sub category"]);
+                break;
+            default:
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+        }
+        die();
     }
 
     public function account()

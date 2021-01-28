@@ -68,4 +68,16 @@ class MainModel
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
     }
+
+    public function addMainCategory($name)
+    {
+        $sql = "insert into categories (name) values ('" . $name . "')";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function addSubCategory($name, $category)
+    {
+        $sql = "insert into sub_categories (name, category_id) values ('" . $name . "', " . $category. ")";
+        return mysqli_query($this->conn, $sql);
+    }
 }

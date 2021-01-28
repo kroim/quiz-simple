@@ -88,6 +88,12 @@ class MainController
                 if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a main category successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed updating a main category"]);
                 break;
+            case "remove_main_category":
+                $id = $request['id'];
+                $remove_action = $this->mainModel->removeMainCategory($id);
+                if ($remove_action) echo json_encode(["status"=>"success", "message"=>"Removed a main category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed removing a main category"]);
+                break;
             case "add_sub_category":
                 $name = $request["name"];
                 $category = $request["category"];
@@ -102,6 +108,12 @@ class MainController
                 $edit_action = $this->mainModel->editSubCategory($id, $name, $parent);
                 if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a sub category successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed updating a sub category"]);
+                break;
+            case "remove_sub_category":
+                $id = $request['id'];
+                $remove_action = $this->mainModel->removeSubCategory($id);
+                if ($remove_action) echo json_encode(["status"=>"success", "message"=>"Removed a sub category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed removing a sub category"]);
                 break;
             default:
                 echo json_encode(["status"=>"error", "message"=>"Undefined method"]);

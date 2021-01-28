@@ -9,6 +9,9 @@ include(PREPEND_PATH . "views/partials/header.php");
         text-align: center;
         font-size: 14px;
     }
+    #modal_remove_main_category .modal-body, #modal_remove_sub_category .modal-body {
+        text-align: center;
+    }
 </style>
 <body data-sa-theme="10">
 <?php include(PREPEND_PATH . "views/partials/sidebar.php"); ?>
@@ -187,6 +190,44 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </div>
+<!-- remove a main category modal -->
+<div class="modal fade" id="modal_remove_main_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="zwicon-info-circle" style="font-size: 7rem"></i>
+                </div>
+                <div class="form-group">
+                    <h3>Are you sure to remove?</h3>
+                </div>
+                <input type="hidden" id="modal_remove_main_category_id">
+                <button type="button" class="btn btn-link" onclick="removeMainCategoryBtn()">Remove</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- remove a sub category modal -->
+<div class="modal fade" id="modal_remove_sub_category" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="zwicon-info-circle" style="font-size: 7rem"></i>
+                </div>
+                <div class="form-group">
+                    <h3>Are you sure to remove?</h3>
+                </div>
+                <input type="hidden" id="modal_remove_sub_category_id">
+                <button type="button" class="btn btn-link" onclick="removeSubCategoryBtn()">Remove</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include(PREPEND_PATH . "views/partials/footer.php"); ?>
 <?php include(PREPEND_PATH . "views/partials/foot.php"); ?>
 <script>
@@ -275,7 +316,28 @@ include(PREPEND_PATH . "views/partials/header.php");
         })
     }
     function removeMainCategory(id) {
-
+        $('#modal_remove_main_category_id').val(id);
+        $('#modal_remove_main_category').modal();
+    }
+    function removeMainCategoryBtn() {
+        let category_id = $('#modal_remove_main_category_id').val();
+        $.ajax({
+            url: base_url + "/user-categories",
+            method: 'post',
+            data: {
+                action: "remove_main_category",
+                id: category_id,
+            },
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000);
+                } else customAlert(res.message);
+            }
+        })
     }
     function editSubCategory(id, category_id) {
         $('#modal_edit_sub_category_id').val(id);
@@ -309,7 +371,28 @@ include(PREPEND_PATH . "views/partials/header.php");
         })
     }
     function removeSubCategory(id) {
-        console.log(id);
+        $('#modal_remove_sub_category_id').val(id);
+        $('#modal_remove_sub_category').modal();
+    }
+    function removeSubCategoryBtn() {
+        let sub_id = $('#modal_remove_sub_category_id').val();
+        $.ajax({
+            url: base_url + "/user-categories",
+            method: 'post',
+            data: {
+                action: "remove_sub_category",
+                id: sub_id,
+            },
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000);
+                } else customAlert(res.message);
+            }
+        })
     }
 </script>
 </body>

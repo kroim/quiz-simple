@@ -83,6 +83,18 @@ class MainModel
         return $query_res;
     }
 
+    public function removeMainCategory($id)
+    {
+        $sql = "delete from categories where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        if ($query_res) {
+            $sub_sql = "delete from sub_categories where category_id=" . $id;
+            mysqli_query($this->conn, $sub_sql);
+        }
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
     public function addSubCategory($name, $category)
     {
         $sql = "insert into sub_categories (name, category_id) values ('" . $name . "', " . $category. ")";
@@ -92,6 +104,14 @@ class MainModel
     public function editSubCategory($id, $name, $parent)
     {
         $sql = "update sub_categories set name='" . $name . "', category_id=" . $parent . " where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
+    public function removeSubCategory($id)
+    {
+        $sql = "delete from sub_categories where id=" . $id;
         $query_res = mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
         return $query_res;

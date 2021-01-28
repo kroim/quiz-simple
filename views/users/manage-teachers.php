@@ -36,7 +36,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                             <td class="user-number"><?php echo $users[$i]['id']; ?></td>
                             <td class="user-name"><?php echo $users[$i]['name']; ?></td>
                             <td class="user-email"><?php echo $users[$i]['email']; ?></td>
-                            <td class="user-description"<?php echo $users[$i]['description']; ?>></td>
+                            <td class="user-description"><?php echo $users[$i]['description']; ?></td>
                         </tr>
                     <?php } ?>
                     </tbody>

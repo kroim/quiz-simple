@@ -23,7 +23,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 <table id="users-table" class="table table-bordered">
                     <thead>
                     <tr>
-                        <th style="width: 5%">NO</th>
+                        <th style="width: 5%">No</th>
                         <th style="width: 20%">Name</th>
                         <th style="width: 35%">Email</th>
                         <th style="width: 10%">Role</th>
@@ -33,7 +33,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <tbody>
                     <?php for ($i = 0; $i < count($users); $i++) { ?>
                         <tr id="user_<?php echo $users[$i]['id']; ?>">
-                            <td class="user-number"><?php echo $users[$i]['id']; ?></td>
+                            <td class="user-number"><?php echo $i + 1 ?></td>
                             <td class="user-name"><?php echo $users[$i]['name']; ?></td>
                             <td class="user-email"><?php echo $users[$i]['email']; ?></td>
                             <td class="user-role"><?php if ($users[$i]['role'] == 2) echo "Teacher"; else echo "Student"; ?></td>

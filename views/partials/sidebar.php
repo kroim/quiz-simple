@@ -17,18 +17,14 @@
             </li>
             <?php if ($_SESSION['user_role'] == 1) { ?>
                 <li class="navigation__sub <?php if ($sidebar->menu == "user_management") echo 'navigation__sub--active'; ?>">
-                    <a href="javascript:"><i class="zwicon-users"></i> User Management <i class="zwicon-arrow-down"></i></a>
+                    <a href="javascript:"><i class="zwicon-users"></i> Management <i class="zwicon-arrow-down"></i></a>
                     <ul>
                         <li class="<?php if ($sidebar->sub_menu == "user-role") echo 'navigation__active'; ?>">
-                            <a href="<?php echo $base_url; ?>/user-role"> Change Role</a>
+                            <a href="<?php echo $base_url; ?>/user-role"> Users</a>
                         </li>
-                        <li class="<?php if ($sidebar->sub_menu == "user-teachers") echo 'navigation__active'; ?>">
-                            <a href="<?php echo $base_url; ?>/user-teachers"> Teachers</a>
+                        <li class="<?php if ($sidebar->sub_menu == "user-categories") echo 'navigation__active'; ?>">
+                            <a href="<?php echo $base_url; ?>/user-categories"> Categories</a>
                         </li>
-                        <li class="<?php if ($sidebar->sub_menu == "user-students") echo 'navigation__active'; ?>">
-                            <a href="<?php echo $base_url; ?>/user-students"> Students</a>
-                        </li>
-
                     </ul>
                 </li>
             <?php } ?>

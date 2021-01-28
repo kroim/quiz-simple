@@ -54,4 +54,18 @@ class MainModel
         mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
     }
+
+    public function getCategories()
+    {
+        $sql = "select * from categories";
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getSubCategories()
+    {
+        $sql = "select A.id, A.name, B.id as category_id, B.name as category_name from sub_categories as A left join categories as B on A.category_id = B.id";
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
+    }
 }

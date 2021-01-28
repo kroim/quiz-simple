@@ -59,36 +59,21 @@ class MainController
         die();
     }
 
-    public function manageTeachers()
+    public function manageCategories()
     {
         $this->check_session();
         $base_url = $this->base_url;
         $sidebar = new stdClass();
         $sidebar->menu = "user_management";
-        $sidebar->sub_menu = "user-teachers";
-        $users = $this->mainModel->getUsers(2);
-        require_once __DIR__ . "/../views/users/manage-teachers.php";
+        $sidebar->sub_menu = "user-categories";
+        $categories = $this->mainModel->getCategories();
+        $sub_categories = $this->mainModel->getSubCategories();
+        require_once __DIR__ . "/../views/users/manage-categories.php";
     }
 
-    public function postManageTeachers($request)
+    public function postManageCategories($request)
     {
         echo "Post ManageTeachers";
-    }
-
-    public function manageStudents()
-    {
-        $this->check_session();
-        $base_url = $this->base_url;
-        $sidebar = new stdClass();
-        $sidebar->menu = "user_management";
-        $sidebar->sub_menu = "user-students";
-        $users = $this->mainModel->getUsers(3);
-        require_once __DIR__ . "/../views/users/manage-students.php";
-    }
-
-    public function postManageStudents($request)
-    {
-        echo "Post ManageStudents";
     }
 
     public function account()

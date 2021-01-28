@@ -63,17 +63,11 @@ class Routes
         $this->route->post("/user-role", function () {
             $this->main->postManageRole($_REQUEST);
         });
-        $this->route->get("/user-teachers", function () {
-            $this->main->manageTeachers();
+        $this->route->get("/user-categories", function () {
+            $this->main->manageCategories();
         });
-        $this->route->post("/user-teachers", function () {
-            $this->main->postManageTeachers($_REQUEST);
-        });
-        $this->route->get("/user-students", function () {
-            $this->main->manageStudents();
-        });
-        $this->route->post("/user-students", function () {
-            $this->main->postManageStudents($_REQUEST);
+        $this->route->post("/user-categories", function () {
+            $this->main->postManageCategories($_REQUEST);
         });
         $this->route->get("/account", function () {
             $this->main->account();

@@ -81,12 +81,27 @@ class MainController
                 if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a main category successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed a main category"]);
                 break;
+            case "edit_main_category":
+                $id = $request['id'];
+                $name = $request['name'];
+                $edit_action = $this->mainModel->editMainCategory($id, $name);
+                if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a main category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed updating a main category"]);
+                break;
             case "add_sub_category":
                 $name = $request["name"];
                 $category = $request["category"];
                 $add_action = $this->mainModel->addSubCategory($name, $category);
                 if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a sub category successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed a sub category"]);
+                break;
+            case "edit_sub_category":
+                $id = $request['id'];
+                $name = $request['name'];
+                $parent = $request['parent'];
+                $edit_action = $this->mainModel->editSubCategory($id, $name, $parent);
+                if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a sub category successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed updating a sub category"]);
                 break;
             default:
                 echo json_encode(["status"=>"error", "message"=>"Undefined method"]);

@@ -75,9 +75,25 @@ class MainModel
         return mysqli_query($this->conn, $sql);
     }
 
+    public function editMainCategory($id, $name)
+    {
+        $sql = "update categories set name='" . $name . "' where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
     public function addSubCategory($name, $category)
     {
         $sql = "insert into sub_categories (name, category_id) values ('" . $name . "', " . $category. ")";
         return mysqli_query($this->conn, $sql);
+    }
+
+    public function editSubCategory($id, $name, $parent)
+    {
+        $sql = "update sub_categories set name='" . $name . "', category_id=" . $parent . " where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
     }
 }

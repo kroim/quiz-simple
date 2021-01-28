@@ -40,10 +40,12 @@ class AuthController
             echo json_encode(['status'=>'error', 'message'=>'The password is wrong']);
             die();
         }
+        $_SESSION['user_id'] = $identifyUser['id'];
         $_SESSION['user_name'] = $identifyUser['name'];
         $_SESSION['user_email'] = $identifyUser['email'];
         $_SESSION['user_role'] = $identifyUser['role'];
         $_SESSION['user_avatar'] = $identifyUser['avatar'];
+        $_SESSION['user_description'] = $identifyUser['description'];
         $_SESSION['user_status'] = 1;
         $this->authModel->changeUserStatus($email);
         echo json_encode(['status'=>'success', 'message'=>'Login is success']);

@@ -3,12 +3,14 @@
 include "route.php";
 include "controllers/AuthController.php";
 include "controllers/MainController.php";
+
 class Routes
 {
     private $base_url;
     private $route;
     private $auth;
     private $main;
+
     public function __construct()
     {
         $parsed = parse_ini_file('.env', true);
@@ -58,14 +60,26 @@ class Routes
         $this->route->get("/user-role", function () {
             $this->main->manageRole();
         });
+        $this->route->post("/user-role", function () {
+            $this->main->postManageRole($_REQUEST);
+        });
         $this->route->get("/user-teachers", function () {
             $this->main->manageTeachers();
+        });
+        $this->route->post("/user-teachers", function () {
+            $this->main->postManageTeachers($_REQUEST);
         });
         $this->route->get("/user-students", function () {
             $this->main->manageStudents();
         });
+        $this->route->post("/user-students", function () {
+            $this->main->postManageStudents($_REQUEST);
+        });
         $this->route->get("/account", function () {
             $this->main->account();
+        });
+        $this->route->post("/account", function () {
+            $this->main->postAccount($_REQUEST);
         });
         $this->route->get("/logout", function () {
             $this->main->logout();

@@ -3,7 +3,7 @@
     <div class="scrollbar">
         <div class="user">
             <div class="user__info">
-                <img class="user__img" src="<?php echo $base_url . $_SESSION['user_avatar'] ?>" alt="">
+                <img class="user__img" src="<?php echo $base_url . $_SESSION['user_avatar'] ?>" alt="avatar">
                 <div style="word-break: break-all">
                     <div class="user__name"><?php echo $_SESSION['user_name'] ?></div>
                     <div class="user__email"><?php echo $_SESSION['user_email'] ?></div>

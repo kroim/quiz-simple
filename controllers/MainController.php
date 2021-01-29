@@ -122,32 +122,64 @@ class MainController
         die();
     }
 
-    public function manageQuestions()
+    public function manageQuestionsAll()
     {
         $this->check_session();
         $base_url = $this->base_url;
         $sidebar = new stdClass();
         $sidebar->menu = "questions";
-        $sidebar->sub_menu = "";
-        require_once __DIR__ . "/../views/main/questions.php";
+        $sidebar->sub_menu = "questions-all";
+        $questions = $this->mainModel->getAllQuestions();
+        require_once __DIR__ . "/../views/main/questions_all.php";
     }
 
-    public function postManageQuestions($request)
+    public function postManageQuestionsAll($request)
     {
 
     }
 
-    public function manageQuizzes()
+    public function manageQuestionsOwn()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "questions";
+        $sidebar->sub_menu = "questions-own";
+        $questions = $this->mainModel->getQuestionsByUser($_SESSION['user_id']);
+        require_once __DIR__ . "/../views/main/questions.php";
+    }
+
+    public function postManageQuestionsOwn($request)
+    {
+
+    }
+
+    public function manageQuizzesAll()
     {
         $this->check_session();
         $base_url = $this->base_url;
         $sidebar = new stdClass();
         $sidebar->menu = "quizzes";
-        $sidebar->sub_menu = "";
+        $sidebar->sub_menu = "quizzes-all";
+        require_once __DIR__ . "/../views/main/quizzes_all.php";
+    }
+
+    public function postManageQuizzesAll($request)
+    {
+
+    }
+
+    public function manageQuizzesOwn()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "quizzes";
+        $sidebar->sub_menu = "quizzes-own";
         require_once __DIR__ . "/../views/main/quizzes.php";
     }
 
-    public function postManageQuizzes($request)
+    public function postManageQuizzesOwn($request)
     {
 
     }

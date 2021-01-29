@@ -22,7 +22,8 @@ class MainModel
         } else return null;
     }
 
-    public function getUsers($type) {
+    public function getUsers($type)
+    {
         $sql = "";
         if ($type == 2 || $type == 3) {
             $sql = "select * from users where role=" . $type;
@@ -97,7 +98,7 @@ class MainModel
 
     public function addSubCategory($name, $category)
     {
-        $sql = "insert into sub_categories (name, category_id) values ('" . $name . "', " . $category. ")";
+        $sql = "insert into sub_categories (name, category_id) values ('" . $name . "', " . $category . ")";
         return mysqli_query($this->conn, $sql);
     }
 
@@ -115,5 +116,34 @@ class MainModel
         $query_res = mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
         return $query_res;
+    }
+
+    public function getAllQuestions()
+    {
+        $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id";
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
+    public function getQuestionsByUser($user_id)
+    {
+        $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id where user_id = " . $user_id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
+    public function getQuestionsById($id)
+    {
+        $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id where user_id = " . $id . " limit 1";
+        $select = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $select->fetch_assoc();
+    }
+
+    public function getAllQuizzes()
+    {
+
     }
 }

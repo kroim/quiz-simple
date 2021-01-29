@@ -10,8 +10,7 @@ include(PREPEND_PATH . "views/partials/header.php");
 <section class="content">
 
     <header class="content__title">
-        <h1>Questions</h1>
-
+        <h1>All Questions</h1>
     </header>
 
 </section>

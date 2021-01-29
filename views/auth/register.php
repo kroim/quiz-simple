@@ -17,7 +17,7 @@ include(PREPEND_PATH."views/partials/head.php");
 
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo $base_url ?>/login">Already have an account?</a>
-                        <a class="dropdown-item" href="<?php echo $base_url ?>/forgot-password">Forgot password?</a>
+<!--                        <a class="dropdown-item" href="--><?php //echo $base_url ?><!--/forgot-password">Forgot password?</a>-->
                     </div>
                 </div>
             </div>

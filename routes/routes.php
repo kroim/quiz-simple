@@ -69,17 +69,29 @@ class Routes
         $this->route->post("/user-categories", function () {
             $this->main->postManageCategories($_REQUEST);
         });
-        $this->route->get("/questions", function () {
-            $this->main->manageQuestions();
+        $this->route->get("/questions-all", function () {
+            $this->main->manageQuestionsAll();
         });
-        $this->route->post("/questions", function () {
-            $this->main->postManageQuestions($_REQUEST);
+        $this->route->post("/questions-all", function () {
+            $this->main->postManageQuestionsAll($_REQUEST);
         });
-        $this->route->get("/quizzes", function () {
-            $this->main->manageQuizzes();
+        $this->route->get("/questions-own", function () {
+            $this->main->manageQuestionsOwn();
         });
-        $this->route->post("/quizzes", function () {
-            $this->main->postManageQuizzes($_REQUEST);
+        $this->route->post("/questions-own", function () {
+            $this->main->postManageQuestionsOwn($_REQUEST);
+        });
+        $this->route->get("/quizzes-all", function () {
+            $this->main->manageQuizzesAll();
+        });
+        $this->route->post("/quizzes-all", function () {
+            $this->main->postManageQuizzesAll($_REQUEST);
+        });
+        $this->route->get("/quizzes-own", function () {
+            $this->main->manageQuizzesOwn();
+        });
+        $this->route->post("/quizzes-own", function () {
+            $this->main->postManageQuizzesOwn($_REQUEST);
         });
         $this->route->get("/account", function () {
             $this->main->account();

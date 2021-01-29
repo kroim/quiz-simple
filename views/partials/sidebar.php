@@ -29,11 +29,27 @@
                 </li>
             <?php } ?>
             <?php if ($_SESSION['user_role'] == 1 || $_SESSION['user_role'] == 2) { ?>
-                <li class="<?php if ($sidebar->menu == "questions") echo 'navigation__active'; ?>">
-                    <a href="<?php echo $base_url; ?>/questions"><i class="zwicon-info-circle"></i> Questions</a>
+                <li class="navigation__sub <?php if ($sidebar->menu == "questions") echo 'navigation__sub--active'; ?>">
+                    <a href="javascript:"><i class="zwicon-info-circle"></i> Questions <i class="zwicon-arrow-down"></i></a>
+                    <ul>
+                        <li class="<?php if ($sidebar->sub_menu == "questions-all") echo 'navigation__active'; ?>">
+                            <a href="<?php echo $base_url; ?>/questions-all"> All questions</a>
+                        </li>
+                        <li class="<?php if ($sidebar->sub_menu == "questions-own") echo 'navigation__active'; ?>">
+                            <a href="<?php echo $base_url; ?>/questions-own"> My questions</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="<?php if ($sidebar->menu == "quizzes") echo 'navigation__active'; ?>">
-                    <a href="<?php echo $base_url; ?>/quizzes"><i class="zwicon-ab-testing"></i> Quizzes</a>
+                <li class="navigation__sub <?php if ($sidebar->menu == "quizzes") echo 'navigation__sub--active'; ?>">
+                    <a href="javascript:"><i class="zwicon-ab-testing"></i> Quizzes <i class="zwicon-arrow-down"></i></a>
+                    <ul>
+                        <li class="<?php if ($sidebar->sub_menu == "quizzes-all") echo 'navigation__active'; ?>">
+                            <a href="<?php echo $base_url; ?>/quizzes-all"> All quizzes</a>
+                        </li>
+                        <li class="<?php if ($sidebar->sub_menu == "quizzes-own") echo 'navigation__active'; ?>">
+                            <a href="<?php echo $base_url; ?>/quizzes-own"> My quizzes</a>
+                        </li>
+                    </ul>
                 </li>
             <?php } ?>
             <?php if ($_SESSION['user_role'] == 1 || $_SESSION['user_role'] == 3) { ?>

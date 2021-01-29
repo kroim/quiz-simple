@@ -278,10 +278,10 @@ include(PREPEND_PATH . "views/partials/header.php");
                 answers.push({name: name, flag: item_flag});
             });
             $.ajax({
-                url: base_url + '/questions-own',
+                url: base_url + '/questions-all',
                 method: 'post',
                 data: {
-                    action: "add_question_own",
+                    action: "add_question_all",
                     category: category,
                     sub_category: sub_category,
                     question: question,
@@ -349,7 +349,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 answers.push({name: name, flag: item_flag});
             });
             let data = {
-                action: "edit_question_own",
+                action: "edit_question_all",
                 question_id: question_id,
                 category: category,
                 sub_category: sub_category,
@@ -357,7 +357,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 answers: JSON.stringify(answers),
             };
             $.ajax({
-                url: base_url + '/questions-own',
+                url: base_url + '/questions-all',
                 method: 'post',
                 data: data,
                 success: function (res) {
@@ -379,10 +379,10 @@ include(PREPEND_PATH . "views/partials/header.php");
         function removeQuestionBtn() {
             let question_id = $('#modal_remove_question_id').val();
             $.ajax({
-                url: base_url + '/questions-own',
+                url: base_url + '/questions-all',
                 method: 'post',
                 data: {
-                    action: "remove_question_own",
+                    action: "remove_question_all",
                     question_id: question_id,
                 },
                 success: function (res) {

@@ -137,7 +137,42 @@ class MainController
 
     public function postManageQuestionsAll($request)
     {
-
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 1) {
+            echo json_encode(["status"=>"error", "message"=>"Permission is not defined"]);
+            die();
+        }
+        $action = $request['action'];
+        switch ($action) {
+            case "add_question_all":
+                $category = $request['category'];
+                $sub_category = $request['sub_category'];
+                $question = $request['question'];
+                $answers = $request['answers'];
+                $query_res = $this->mainModel->createQuestion($_SESSION['user_id'], $category, $sub_category, $question, $answers);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Created a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed adding a question"]);
+                break;
+            case "edit_question_all":
+                $question_id = $request['question_id'];
+                $category = $request['category'];
+                $sub_category = $request['sub_category'];
+                $question = $request['question'];
+                $answers = $request['answers'];
+                $query_res = $this->mainModel->updateQuestion($question_id, $category, $sub_category, $question, $answers);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Updated a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed updating a question"]);
+                break;
+            case "remove_question_all":
+                $question_id = $request['question_id'];
+                $query_res = $this->mainModel->removeQuestion($question_id);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Removed a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed removing a question"]);
+                break;
+            default:
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+        }
+        die();
     }
 
     public function manageQuestionsOwn()

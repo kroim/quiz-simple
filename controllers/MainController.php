@@ -129,6 +129,8 @@ class MainController
         $sidebar = new stdClass();
         $sidebar->menu = "questions";
         $sidebar->sub_menu = "questions-all";
+        $categories = $this->mainModel->getCategories();
+        $sub_categories = $this->mainModel->getSubCategories();
         $questions = $this->mainModel->getAllQuestions();
         require_once __DIR__ . "/../views/main/questions_all.php";
     }
@@ -145,13 +147,46 @@ class MainController
         $sidebar = new stdClass();
         $sidebar->menu = "questions";
         $sidebar->sub_menu = "questions-own";
+        $categories = $this->mainModel->getCategories();
+        $sub_categories = $this->mainModel->getSubCategories();
         $questions = $this->mainModel->getQuestionsByUser($_SESSION['user_id']);
         require_once __DIR__ . "/../views/main/questions.php";
     }
 
     public function postManageQuestionsOwn($request)
     {
-
+        $action = $request['action'];
+        switch ($action) {
+            case "add_question_own":
+                $category = $request['category'];
+                $sub_category = $request['sub_category'];
+                $question = $request['question'];
+                $answers = $request['answers'];
+                $query_res = $this->mainModel->createQuestion($_SESSION['user_id'], $category, $sub_category, $question, $answers);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Created a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed adding a question"]);
+                break;
+            case "edit_question_own":
+                $question_id = $request['question_id'];
+                $category = $request['category'];
+                $sub_category = $request['sub_category'];
+                $question = $request['question'];
+                $answers = $request['answers'];
+                $query_res = $this->mainModel->updateQuestion($question_id, $category, $sub_category, $question, $answers);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Updated a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed updating a question"]);
+                break;
+            case "remove_question_own":
+                $question_id = $request['question_id'];
+                $query_res = $this->mainModel->removeQuestion($question_id);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Removed a question successfully."]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed removing a question"]);
+                break;
+            default:
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+        }
+        die();
     }
 
     public function manageQuizzesAll()

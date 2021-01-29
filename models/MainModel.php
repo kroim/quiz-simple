@@ -123,7 +123,7 @@ class MainModel
         $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id";
         $query_res = mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
-        return $query_res;
+        return $query_res->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getQuestionsByUser($user_id)
@@ -131,7 +131,7 @@ class MainModel
         $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id where user_id = " . $user_id;
         $query_res = mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
-        return $query_res;
+        return $query_res->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getQuestionsById($id)
@@ -140,6 +140,33 @@ class MainModel
         $select = mysqli_query($this->conn, $sql);
         mysqli_close($this->conn);
         return $select->fetch_assoc();
+    }
+
+    public function createQuestion($user_id, $category, $sub_category, $question, $answer)
+    {
+        $created_at = date("Y-m-d H:i:s");
+        $updated_at = date("Y-m-d H:i:s");
+        $sql = "insert into questions (user_id, category_id, sub_category_id, question, answers, created_at, updated_at) values ("
+            . $user_id . ", " . $category . ", " . $sub_category . ", '" . $question . "', '" . $answer . "', '" . $created_at . "', '" . $updated_at . "')";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function updateQuestion($id, $category, $sub_category, $question, $answer)
+    {
+        $updated_at = date("Y-m-d H:i:s");
+        $sql = "update questions set category_id='" . $category . "', sub_category_id=" . $sub_category . ", question='" . $question
+            . "', answers='" . $answer . "', updated_at='" . $updated_at . "' where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
+    }
+
+    public function removeQuestion($id)
+    {
+        $sql = "delete from questions where id=" . $id;
+        $query_res = mysqli_query($this->conn, $sql);
+        mysqli_close($this->conn);
+        return $query_res;
     }
 
     public function getAllQuizzes()

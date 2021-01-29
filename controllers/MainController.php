@@ -122,6 +122,36 @@ class MainController
         die();
     }
 
+    public function manageQuestions()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "questions";
+        $sidebar->sub_menu = "";
+        require_once __DIR__ . "/../views/main/questions.php";
+    }
+
+    public function postManageQuestions($request)
+    {
+
+    }
+
+    public function manageQuizzes()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "quizzes";
+        $sidebar->sub_menu = "";
+        require_once __DIR__ . "/../views/main/quizzes.php";
+    }
+
+    public function postManageQuizzes($request)
+    {
+
+    }
+
     public function account()
     {
         $this->check_session();

@@ -28,6 +28,19 @@
                     </ul>
                 </li>
             <?php } ?>
+            <?php if ($_SESSION['user_role'] == 1 || $_SESSION['user_role'] == 2) { ?>
+                <li class="<?php if ($sidebar->menu == "questions") echo 'navigation__active'; ?>">
+                    <a href="<?php echo $base_url; ?>/questions"><i class="zwicon-info-circle"></i> Questions</a>
+                </li>
+                <li class="<?php if ($sidebar->menu == "quizzes") echo 'navigation__active'; ?>">
+                    <a href="<?php echo $base_url; ?>/quizzes"><i class="zwicon-ab-testing"></i> Quizzes</a>
+                </li>
+            <?php } ?>
+            <?php if ($_SESSION['user_role'] == 1 || $_SESSION['user_role'] == 3) { ?>
+                <li class="<?php if ($sidebar->menu == "tests") echo 'navigation__active'; ?>">
+                    <a href="<?php echo $base_url; ?>/tests"><i class="zwicon-edit-pencil"></i> Tests</a>
+                </li>
+            <?php } ?>
             <li class="<?php if ($sidebar->menu == "account") echo 'navigation__active'; ?>">
                 <a href="<?php echo $base_url; ?>/account"><i class="zwicon-user-circle"></i> Account</a>
             </li>

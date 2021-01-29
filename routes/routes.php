@@ -69,6 +69,18 @@ class Routes
         $this->route->post("/user-categories", function () {
             $this->main->postManageCategories($_REQUEST);
         });
+        $this->route->get("/questions", function () {
+            $this->main->manageQuestions();
+        });
+        $this->route->post("/questions", function () {
+            $this->main->postManageQuestions($_REQUEST);
+        });
+        $this->route->get("/quizzes", function () {
+            $this->main->manageQuizzes();
+        });
+        $this->route->post("/quizzes", function () {
+            $this->main->postManageQuizzes($_REQUEST);
+        });
         $this->route->get("/account", function () {
             $this->main->account();
         });

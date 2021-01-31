@@ -43,9 +43,11 @@
                 <li class="navigation__sub <?php if ($sidebar->menu == "quizzes") echo 'navigation__sub--active'; ?>">
                     <a href="javascript:"><i class="zwicon-ab-testing"></i> Quizzes <i class="zwicon-arrow-down"></i></a>
                     <ul>
-                        <li class="<?php if ($sidebar->sub_menu == "quizzes-all") echo 'navigation__active'; ?>">
-                            <a href="<?php echo $base_url; ?>/quizzes-all"> All quizzes</a>
-                        </li>
+                        <?php if ($_SESSION['user_role'] == 1) { ?>
+                            <li class="<?php if ($sidebar->sub_menu == "quizzes-all") echo 'navigation__active'; ?>">
+                                <a href="<?php echo $base_url; ?>/quizzes-all"> All quizzes</a>
+                            </li>
+                        <?php } ?>
                         <li class="<?php if ($sidebar->sub_menu == "quizzes-own") echo 'navigation__active'; ?>">
                             <a href="<?php echo $base_url; ?>/quizzes-own"> My quizzes</a>
                         </li>

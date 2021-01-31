@@ -46,7 +46,6 @@ class MainModel
         if ($avatar) $sql .= ", avatar='" . $avatar . "'";
         $sql .= " where id=" . $id;
         mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
     }
 
     public function logout($email)
@@ -79,9 +78,7 @@ class MainModel
     public function editMainCategory($id, $name)
     {
         $sql = "update categories set name='" . $name . "' where id=" . $id;
-        $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
-        return $query_res;
+        return mysqli_query($this->conn, $sql);
     }
 
     public function removeMainCategory($id)
@@ -92,7 +89,6 @@ class MainModel
             $sub_sql = "delete from sub_categories where category_id=" . $id;
             mysqli_query($this->conn, $sub_sql);
         }
-        mysqli_close($this->conn);
         return $query_res;
     }
 
@@ -105,24 +101,19 @@ class MainModel
     public function editSubCategory($id, $name, $parent)
     {
         $sql = "update sub_categories set name='" . $name . "', category_id=" . $parent . " where id=" . $id;
-        $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
-        return $query_res;
+        return mysqli_query($this->conn, $sql);
     }
 
     public function removeSubCategory($id)
     {
         $sql = "delete from sub_categories where id=" . $id;
-        $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
-        return $query_res;
+        return mysqli_query($this->conn, $sql);
     }
 
     public function getAllQuestions()
     {
         $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id";
         $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
         return $query_res->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -130,7 +121,6 @@ class MainModel
     {
         $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id where user_id = " . $user_id;
         $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
         return $query_res->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -138,7 +128,6 @@ class MainModel
     {
         $sql = "select A.id, A.question, A.answers, B.id as user_id, B.name as user_name, B.email as user_email, C.id as category_id, C.name as category_name, SC.id as sub_id, SC.name as sub_name from questions as A left join users as B on A.user_id = B.id left join categories as C on A.category_id = C.id left join sub_categories as SC on A.sub_category_id = SC.id where user_id = " . $id . " limit 1";
         $select = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
         return $select->fetch_assoc();
     }
 
@@ -156,21 +145,31 @@ class MainModel
         $updated_at = date("Y-m-d H:i:s");
         $sql = "update questions set category_id='" . $category . "', sub_category_id=" . $sub_category . ", question='" . $question
             . "', answers='" . $answer . "', updated_at='" . $updated_at . "' where id=" . $id;
-        $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
-        return $query_res;
+        return mysqli_query($this->conn, $sql);
     }
 
     public function removeQuestion($id)
     {
         $sql = "delete from questions where id=" . $id;
-        $query_res = mysqli_query($this->conn, $sql);
-        mysqli_close($this->conn);
-        return $query_res;
+        return mysqli_query($this->conn, $sql);
     }
 
     public function getAllQuizzes()
     {
 
+    }
+
+    public function getQuizByCode($code)
+    {
+        $sql = "select A.id, A.code, A.question_id, B.question, B.answers, A.duration from quizzes as A left join questions as B on A.question_id = B.id where A.code = " . $code;
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_assoc();
+    }
+
+    public function getQuizzesByUser($user_id)
+    {
+        $sql = "select A.id, A.code, A.question_id, B.question, B.answers, A.duration from quizzes as A left join questions as B on A.question_id = B.id where A.user_id = " . $user_id;
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
     }
 }

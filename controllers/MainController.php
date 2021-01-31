@@ -246,6 +246,8 @@ class MainController
         $sidebar = new stdClass();
         $sidebar->menu = "quizzes";
         $sidebar->sub_menu = "quizzes-own";
+        $questions = $this->mainModel->getAllQuestions();
+        $quizzes = $this->mainModel->getQuizzesByUser($_SESSION['user_role']);
         require_once __DIR__ . "/../views/main/quizzes.php";
     }
 

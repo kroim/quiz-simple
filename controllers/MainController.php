@@ -368,7 +368,9 @@ class MainController
 
     public function postTestResult($request)
     {
-
+        $action = $request['action'];
+        echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+        die();
     }
 
     public function account()

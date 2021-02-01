@@ -356,6 +356,21 @@ class MainController
         die();
     }
 
+    public function manageTests()
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "tests";
+        $sidebar->sub_menu = "";
+        require_once __DIR__ . "/../views/main/tests.php";
+    }
+
+    public function postTestResult($request)
+    {
+
+    }
+
     public function account()
     {
         $this->check_session();

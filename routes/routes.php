@@ -93,6 +93,12 @@ class Routes
         $this->route->post("/quizzes-own", function () {
             $this->main->postManageQuizzesOwn($_REQUEST);
         });
+        $this->route->get("/tests", function () {
+            $this->main->manageTests();
+        });
+        $this->route->post("/tests", function () {
+            $this->main->postTestResult($_REQUEST);
+        });
         $this->route->get("/account", function () {
             $this->main->account();
         });

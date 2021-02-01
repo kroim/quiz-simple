@@ -306,6 +306,9 @@ include(PREPEND_PATH . "views/partials/header.php");
         if (answers[1].flag == 1) $('#modal_edit_answers_div .answer-item:nth-child(2) .bg-blue input').prop('checked', true);
         else $('#modal_edit_answers_div .answer-item:nth-child(2) .bg-red input').prop('checked', true);
         if (answers.length > 2) {
+            for (let k = 2; k < answers.length; k++) {
+                $('#modal_edit_answers_div .answer-item:nth-child(3)').remove();
+            }
             let html ='';
             for (let i = 2; i < answers.length; i++) {
                 html += '<div class="form-group answer-item">' +

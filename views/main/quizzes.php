@@ -256,6 +256,36 @@ include(PREPEND_PATH . "views/partials/header.php");
         }
         $('#modal_edit_quiz').modal();
     }
+    $('#modal-edit-quiz-form').on('submit', function (e) {
+        e.preventDefault();
+        let quiz_id = $('#modal_edit_quiz_id').val();
+        let questions = [];
+        $('#modal_edit_questions_div .question-item').each(function (index, item) {
+            let item_id = $(item).find('select').val();
+            questions.push(item_id);
+        });
+        let duration = $('#modal_edit_quiz_duration').val();
+        let data = {
+            action: "edit_quiz_own",
+            quiz_id: quiz_id,
+            questions: JSON.stringify(questions),
+            duration: duration,
+        };
+        $.ajax({
+            url: base_url + "/quizzes-own",
+            method: 'post',
+            data: data,
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
+                } else customAlert(res.message);
+            }
+        })
+    });
     function removeQuiz(id) {
         $('#modal_remove_quiz_id').val(id);
         $('#modal_remove_quiz').modal();

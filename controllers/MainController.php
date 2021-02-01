@@ -284,11 +284,11 @@ class MainController
                 else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
                 break;
             case "edit_quiz_own":
-                $code = $request['code'];
+                $quiz_id = $request['quiz_id'];
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
                 $duration = $request['duration'];
-                $query_res = $this->mainModel->editQuiz($code, $questions, $duration);
+                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $duration);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
                 break;

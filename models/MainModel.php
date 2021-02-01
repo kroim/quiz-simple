@@ -190,10 +190,21 @@ class MainModel
         } else return false;
     }
 
-    public function editQuiz($code, $questions, $duration)
+    public function editQuiz($id, $questions, $duration)
     {
         $updated_at = date("Y-m-d H:i:s");
-        return false;
+        $sql = "update quizzes set total_duration=" . $duration . ", updated_at='" . $updated_at . "'";
+        $query_res = mysqli_query($this->conn, $sql);
+        if ($query_res) {
+            $sql_remove = "delete from quiz_question where quiz_id=" . $id;
+            mysqli_query($this->conn, $sql_remove);
+            $sql_add = "insert into quiz_question (quiz_id, question_id, duration) values ";
+            for ($i = 0; $i < count($questions); $i++) {
+                if ($i > 0) $sql_add .= ", ";
+                $sql_add .= "(" . $id . ", " . $questions[$i] . ", 0)";
+            }
+            return mysqli_query($this->conn, $sql_add);
+        } else return false;
     }
 
     public function removeQuiz($id) {

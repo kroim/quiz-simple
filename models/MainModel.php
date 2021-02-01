@@ -168,7 +168,7 @@ class MainModel
 
     public function getQuizzesByUser($user_id)
     {
-        $sql = "select A.id, A.code, A.question_id, B.question, A.total_duration from quizzes as A left join questions as B on A.question_id = B.id where A.user_id = " . $user_id;
+        $sql = "select A.id, A.code, C.id as question_id, C.question as question, A.total_duration from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id where A.user_id = " . $user_id;
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
     }
@@ -177,12 +177,17 @@ class MainModel
     {
         $created_at = date("Y-m-d H:i:s");
         $updated_at = date("Y-m-d H:i:s");
-        $sql = "insert into quizzes (user_id, code, question_id, duration, total_duration, created_at, updated_at) values ";
-        for ($i = 0; $i < count($questions); $i++) {
-            if ($i > 0) $sql .= ", ";
-            $sql .= "(" . $user_id . ", '" . $code . "', " . $questions[$i] . ", 0, '" . $duration . "', '" . $created_at . "', '" . $updated_at . "')";
-        }
-        return mysqli_query($this->conn, $sql);
+        $sql = "insert into quizzes (user_id, code, total_duration, created_at, updated_at) values (" . $user_id . ", '" . $code . "', " . $duration . ", '" . $created_at . "', '" . $updated_at . "')";
+        mysqli_query($this->conn, $sql);
+        $insert_id = mysqli_insert_id($this->conn);
+        if ($insert_id >= 0) {
+            $sql1 = "insert into quiz_question (quiz_id, question_id, duration) values ";
+            for ($i = 0; $i < count($questions); $i++) {
+                if ($i > 0) $sql1 .= ", ";
+                $sql1 .= "(" . $insert_id . ", " . $questions[$i] . ", 0)";
+            }
+            return mysqli_query($this->conn, $sql1);
+        } else return false;
     }
 
     public function editQuiz($code, $questions, $duration)

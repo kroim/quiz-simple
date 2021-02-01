@@ -248,18 +248,19 @@ class MainController
         $sidebar->sub_menu = "quizzes-own";
         $questions = $this->mainModel->getAllQuestions();
         $quizzes = $this->mainModel->getQuizzesByUser($_SESSION['user_id']);
-        $quiz_codes = array();
+        $quiz_ids = array();
         $new_quizzes = array();
         for ($i = 0; $i < count($quizzes); $i++) {
-            $code = $quizzes[$i]['code'];
-            if (in_array($code, $quiz_codes)) {
-                $index = array_search($code, $quiz_codes);
+            $id = $quizzes[$i]['id'];
+            if (in_array($id, $quiz_ids)) {
+                $index = array_search($id, $quiz_ids);
                 array_push($new_quizzes[$index]->question_ids, $quizzes[$i]['question_id']);
                 array_push($new_quizzes[$index]->questions, $quizzes[$i]['question']);
             } else {
-                array_push($quiz_codes, $code);
+                array_push($quiz_ids, $id);
                 $item = new stdClass();
-                $item->code = $code;
+                $item->id = $id;
+                $item->code = $quizzes[$i]['code'];
                 $item->question_ids = array($quizzes[$i]['question_id']);
                 $item->questions = array($quizzes[$i]['question']);
                 $item->total_duration = $quizzes[$i]['total_duration'];
@@ -292,8 +293,8 @@ class MainController
                 else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
                 break;
             case "remove_quiz_own":
-                $code = $request['code'];
-                $query_res = $this->mainModel->removeQuiz($code);
+                $quiz_id = $request['quiz_id'];
+                $query_res = $this->mainModel->removeQuiz($quiz_id);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Removed a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed removing a quiz"]);
                 break;

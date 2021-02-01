@@ -39,18 +39,18 @@ include(PREPEND_PATH . "views/partials/header.php");
                     </thead>
                     <tbody>
                     <?php for ($i = 0; $i < count($new_quizzes); $i++) { ?>
-                        <tr id="quiz_<?php echo $new_quizzes[$i]->code; ?>">
+                        <tr id="quiz_<?php echo $new_quizzes[$i]->id; ?>">
                             <td class="quiz-id"><?php echo $i + 1; ?></td>
                             <td class="quiz-code"><?php echo $new_quizzes[$i]->code; ?></td>
-                            <td class="quiz-question">
+                            <td class="quiz-question" data-id=`<?php echo json_encode($new_quizzes[$i]->question_ids); ?>`>
                                 <?php for ($j = 0; $j < count($new_quizzes[$i]->questions); $j++) { ?>
                                     <div><?php echo $new_quizzes[$i]->questions[$j]; ?></div>
                                 <?php } ?>
                             </td>
                             <td class="quiz-duration"><?php echo $new_quizzes[$i]->total_duration; ?></td>
                             <td class="question-action">
-                                <button class="btn btn-warning btn-sm" onclick="editQuiz(<?php echo $new_quizzes[$i]->code; ?>)">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="removeQuiz(<?php echo $new_quizzes[$i]->code; ?>)">Remove</button>
+                                <button class="btn btn-warning btn-sm" onclick="editQuiz(<?php echo $new_quizzes[$i]->id; ?>)">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="removeQuiz(<?php echo $new_quizzes[$i]->id; ?>)">Remove</button>
                             </td>
                         </tr>
                     <?php } ?>
@@ -96,6 +96,61 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </div>
+<!-- edit a question modal -->
+<div class="modal fade" id="modal_edit_quiz" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Edit a quiz</h4>
+            </div>
+            <div class="modal-body">
+                <form id="modal-edit-quiz-form">
+                    <label>Questions</label>
+                    <div id="modal_edit_questions_div">
+                        <div class="form-group question-item">
+                            <select class="form-control page-select" required>
+                                <?php for ($k = 0; $k < count($questions); $k++) { ?>
+                                    <option value="<?php echo $questions[$k]['id'] ?>"><?php echo $questions[$k]['question'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-link" onclick="addEditQuestionItem()">Add more question</button>
+                        <button type="button" class="btn btn-link" onclick="removeEditQuestionItem()">Remove one</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (m)</label>
+                        <input class="form-control" id="modal_edit_quiz_duration" type="number" required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-link">Save changes</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- remove a quiz modal -->
+<div class="modal fade" id="modal_remove_quiz" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="zwicon-info-circle" style="font-size: 7rem"></i>
+                </div>
+                <div class="form-group">
+                    <h3>Are you sure to remove?</h3>
+                </div>
+                <input type="hidden" id="modal_remove_quiz_id">
+                <button type="button" class="btn btn-link" onclick="removeQuizBtn()">Remove</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="questions-select-hidden" style="display: none">
     <div class="form-group question-item">
         <select class="form-control page-select" required>
@@ -129,6 +184,15 @@ include(PREPEND_PATH . "views/partials/header.php");
         if (questions_length < 2) return;
         $('#modal_add_questions_div .question-item:nth-child(' + questions_length +')').remove()
     }
+    function addEditQuestionItem() {
+        let html = $('#questions-select-hidden').html();
+        $('#modal_edit_questions_div').append(html);
+    }
+    function removeEditQuestionItem() {
+        let questions_length = $('#modal_edit_questions_div .question-item').length;
+        if (questions_length < 2) return;
+        $('#modal_edit_questions_div .question-item:nth-child(' + questions_length +')').remove()
+    }
     $('#modal-add-quiz-form').on('submit', function (e) {
         e.preventDefault();
         let questions = [];
@@ -156,7 +220,34 @@ include(PREPEND_PATH . "views/partials/header.php");
                 } else customAlert(res.message);
             }
         })
-    })
+    });
+    function editQuiz(id) {
+
+    }
+    function removeQuiz(id) {
+        $('#modal_remove_quiz_id').val(id);
+        $('#modal_remove_quiz').modal();
+    }
+    function removeQuizBtn() {
+        let quiz_id = $('#modal_remove_quiz_id').val();
+        $.ajax({
+            url: base_url + "/quizzes-own",
+            method: 'post',
+            data: {
+                action: "remove_quiz_own",
+                quiz_id: quiz_id,
+            },
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
+                } else customAlert(res.message);
+            }
+        })
+    }
 </script>
 </body>
 </html>

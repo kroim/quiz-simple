@@ -196,9 +196,13 @@ class MainModel
         return false;
     }
 
-    public function removeQuiz($code) {
-        $sql = "delete from quizzes where code='" . $code . "'";
-        return mysqli_query($this->conn, $sql);
+    public function removeQuiz($id) {
+        $sql = "delete from quizzes where id='" . $id . "'";
+        $query_res = mysqli_query($this->conn, $sql);
+        if ($query_res) {
+            $sql1 = "delete from quiz_question where quiz_id=".$id;
+            return mysqli_query($this->conn, $sql1);
+        } else return false;
     }
 
     public function checkCode($code)

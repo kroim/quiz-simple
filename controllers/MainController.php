@@ -231,12 +231,63 @@ class MainController
         $sidebar = new stdClass();
         $sidebar->menu = "quizzes";
         $sidebar->sub_menu = "quizzes-all";
+        $questions = $this->mainModel->getAllQuestions();
+        $quizzes = $this->mainModel->getAllQuizzes();
+        $quiz_ids = array();
+        $new_quizzes = array();
+        for ($i = 0; $i < count($quizzes); $i++) {
+            $id = $quizzes[$i]['id'];
+            if (in_array($id, $quiz_ids)) {
+                $index = array_search($id, $quiz_ids);
+                array_push($new_quizzes[$index]->question_ids, $quizzes[$i]['question_id']);
+                array_push($new_quizzes[$index]->questions, $quizzes[$i]['question']);
+            } else {
+                array_push($quiz_ids, $id);
+                $item = new stdClass();
+                $item->id = $id;
+                $item->code = $quizzes[$i]['code'];
+                $item->question_ids = array($quizzes[$i]['question_id']);
+                $item->questions = array($quizzes[$i]['question']);
+                $item->total_duration = $quizzes[$i]['total_duration'];
+                $new_quizzes[] = $item;
+            }
+        }
         require_once __DIR__ . "/../views/main/quizzes_all.php";
     }
 
     public function postManageQuizzesAll($request)
     {
-
+        $action = $request['action'];
+        switch ($action) {
+            case "add_quiz_all":
+                $questions_string = $request['questions'];
+                $questions = json_decode($questions_string);
+                $duration = $request['duration'];
+                $code = $this->getNewCode();
+                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $duration);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Created a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
+                break;
+            case "edit_quiz_all":
+                $quiz_id = $request['quiz_id'];
+                $questions_string = $request['questions'];
+                $questions = json_decode($questions_string);
+                $duration = $request['duration'];
+                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $duration);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
+                break;
+            case "remove_quiz_all":
+                $quiz_id = $request['quiz_id'];
+                $query_res = $this->mainModel->removeQuiz($quiz_id);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Removed a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a quiz"]);
+                break;
+            default:
+                echo json_encode(["status" => "error", "message" => "Undefined method"]);
+                break;
+        }
+        die();
     }
 
     public function manageQuizzesOwn()

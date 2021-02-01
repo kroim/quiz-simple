@@ -156,7 +156,9 @@ class MainModel
 
     public function getAllQuizzes()
     {
-
+        $sql = "select A.id, A.code, C.id as question_id, C.question as question, A.total_duration from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id";
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getQuizByCode($code)
@@ -193,7 +195,7 @@ class MainModel
     public function editQuiz($id, $questions, $duration)
     {
         $updated_at = date("Y-m-d H:i:s");
-        $sql = "update quizzes set total_duration=" . $duration . ", updated_at='" . $updated_at . "'";
+        $sql = "update quizzes set total_duration=" . $duration . ", updated_at='" . $updated_at . "' where id=" . $id;
         $query_res = mysqli_query($this->conn, $sql);
         if ($query_res) {
             $sql_remove = "delete from quiz_question where quiz_id=" . $id;

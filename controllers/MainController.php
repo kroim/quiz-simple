@@ -20,7 +20,7 @@ class MainController
                 header("location: {$this->base_url}/login");
                 die();
             } else {
-                echo json_encode(['status'=>"error", "message"=>"You are not logged in"]);
+                echo json_encode(['status' => "error", "message" => "You are not logged in"]);
                 die();
             }
         }
@@ -55,7 +55,7 @@ class MainController
         $role_number = 3;
         if ($user_role == 'Teacher') $role_number = 2;
         $this->mainModel->updateUser($user_id, null, null, null, $role_number, null, null);
-        echo json_encode(["status"=>"success", "message"=>"Updated user role"]);
+        echo json_encode(["status" => "success", "message" => "Updated user role"]);
         die();
     }
 
@@ -78,45 +78,45 @@ class MainController
             case "add_main_category":
                 $name = $request["name"];
                 $add_action = $this->mainModel->addMainCategory($name);
-                if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a main category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed a main category"]);
+                if ($add_action) echo json_encode(["status" => "success", "message" => "Added a main category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed a main category"]);
                 break;
             case "edit_main_category":
                 $id = $request['id'];
                 $name = $request['name'];
                 $edit_action = $this->mainModel->editMainCategory($id, $name);
-                if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a main category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed updating a main category"]);
+                if ($edit_action) echo json_encode(["status" => "success", "message" => "Updated a main category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a main category"]);
                 break;
             case "remove_main_category":
                 $id = $request['id'];
                 $remove_action = $this->mainModel->removeMainCategory($id);
-                if ($remove_action) echo json_encode(["status"=>"success", "message"=>"Removed a main category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed removing a main category"]);
+                if ($remove_action) echo json_encode(["status" => "success", "message" => "Removed a main category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a main category"]);
                 break;
             case "add_sub_category":
                 $name = $request["name"];
                 $category = $request["category"];
                 $add_action = $this->mainModel->addSubCategory($name, $category);
-                if ($add_action) echo json_encode(["status"=>"success", "message"=>"Added a sub category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed a sub category"]);
+                if ($add_action) echo json_encode(["status" => "success", "message" => "Added a sub category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed a sub category"]);
                 break;
             case "edit_sub_category":
                 $id = $request['id'];
                 $name = $request['name'];
                 $parent = $request['parent'];
                 $edit_action = $this->mainModel->editSubCategory($id, $name, $parent);
-                if ($edit_action) echo json_encode(["status"=>"success", "message"=>"Updated a sub category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed updating a sub category"]);
+                if ($edit_action) echo json_encode(["status" => "success", "message" => "Updated a sub category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a sub category"]);
                 break;
             case "remove_sub_category":
                 $id = $request['id'];
                 $remove_action = $this->mainModel->removeSubCategory($id);
-                if ($remove_action) echo json_encode(["status"=>"success", "message"=>"Removed a sub category successfully"]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed removing a sub category"]);
+                if ($remove_action) echo json_encode(["status" => "success", "message" => "Removed a sub category successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a sub category"]);
                 break;
             default:
-                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                echo json_encode(["status" => "error", "message" => "Undefined method"]);
                 break;
         }
         die();
@@ -138,7 +138,7 @@ class MainController
     public function postManageQuestionsAll($request)
     {
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 1) {
-            echo json_encode(["status"=>"error", "message"=>"Permission is not defined"]);
+            echo json_encode(["status" => "error", "message" => "Permission is not defined"]);
             die();
         }
         $action = $request['action'];
@@ -149,8 +149,8 @@ class MainController
                 $question = $request['question'];
                 $answers = $request['answers'];
                 $query_res = $this->mainModel->createQuestion($_SESSION['user_id'], $category, $sub_category, $question, $answers);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Created a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed adding a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Created a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed adding a question"]);
                 break;
             case "edit_question_all":
                 $question_id = $request['question_id'];
@@ -159,17 +159,17 @@ class MainController
                 $question = $request['question'];
                 $answers = $request['answers'];
                 $query_res = $this->mainModel->updateQuestion($question_id, $category, $sub_category, $question, $answers);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Updated a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed updating a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a question"]);
                 break;
             case "remove_question_all":
                 $question_id = $request['question_id'];
                 $query_res = $this->mainModel->removeQuestion($question_id);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Removed a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed removing a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Removed a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a question"]);
                 break;
             default:
-                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                echo json_encode(["status" => "error", "message" => "Undefined method"]);
                 break;
         }
         die();
@@ -198,8 +198,8 @@ class MainController
                 $question = $request['question'];
                 $answers = $request['answers'];
                 $query_res = $this->mainModel->createQuestion($_SESSION['user_id'], $category, $sub_category, $question, $answers);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Created a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed adding a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Created a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed adding a question"]);
                 break;
             case "edit_question_own":
                 $question_id = $request['question_id'];
@@ -208,17 +208,17 @@ class MainController
                 $question = $request['question'];
                 $answers = $request['answers'];
                 $query_res = $this->mainModel->updateQuestion($question_id, $category, $sub_category, $question, $answers);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Updated a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed updating a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a question"]);
                 break;
             case "remove_question_own":
                 $question_id = $request['question_id'];
                 $query_res = $this->mainModel->removeQuestion($question_id);
-                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Removed a question successfully."]);
-                else echo json_encode(["status"=>"error", "message"=>"Failed removing a question"]);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Removed a question successfully."]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a question"]);
                 break;
             default:
-                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                echo json_encode(["status" => "error", "message" => "Undefined method"]);
                 break;
         }
         die();
@@ -247,13 +247,61 @@ class MainController
         $sidebar->menu = "quizzes";
         $sidebar->sub_menu = "quizzes-own";
         $questions = $this->mainModel->getAllQuestions();
-        $quizzes = $this->mainModel->getQuizzesByUser($_SESSION['user_role']);
+        $quizzes = $this->mainModel->getQuizzesByUser($_SESSION['user_id']);
+        $quiz_codes = array();
+        $new_quizzes = array();
+        for ($i = 0; $i < count($quizzes); $i++) {
+            $code = $quizzes[$i]['code'];
+            if (in_array($code, $quiz_codes)) {
+                $index = array_search($code, $quiz_codes);
+                array_push($new_quizzes[$index]->question_ids, $quizzes[$i]['question_id']);
+                array_push($new_quizzes[$index]->questions, $quizzes[$i]['question']);
+            } else {
+                array_push($quiz_codes, $code);
+                $item = new stdClass();
+                $item->code = $code;
+                $item->question_ids = array($quizzes[$i]['question_id']);
+                $item->questions = array($quizzes[$i]['question']);
+                $item->total_duration = $quizzes[$i]['total_duration'];
+                $new_quizzes[] = $item;
+            }
+        }
         require_once __DIR__ . "/../views/main/quizzes.php";
     }
 
     public function postManageQuizzesOwn($request)
     {
-
+        $action = $request['action'];
+        switch ($action) {
+            case "add_quiz_own":
+                $questions_string = $request['questions'];
+                $questions = json_decode($questions_string);
+                $duration = $request['duration'];
+                $code = $this->getNewCode();
+                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $duration);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Created a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
+                break;
+            case "edit_quiz_own":
+                $code = $request['code'];
+                $questions_string = $request['questions'];
+                $questions = json_decode($questions_string);
+                $duration = $request['duration'];
+                $query_res = $this->mainModel->editQuiz($code, $questions, $duration);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
+                break;
+            case "remove_quiz_own":
+                $code = $request['code'];
+                $query_res = $this->mainModel->removeQuiz($code);
+                if ($query_res) echo json_encode(["status" => "success", "message" => "Removed a quiz successfully"]);
+                else echo json_encode(["status" => "error", "message" => "Failed removing a quiz"]);
+                break;
+            default:
+                echo json_encode(["status" => "error", "message" => "Undefined method"]);
+                break;
+        }
+        die();
     }
 
     public function account()
@@ -285,25 +333,25 @@ class MainController
             $_SESSION["user_email"] = $email;
             $_SESSION["user_description"] = $description;
             $_SESSION["user_avatar"] = $avatar_url;
-            echo json_encode(["status"=>"success", "message"=>"Update account information successfully"]);
+            echo json_encode(["status" => "success", "message" => "Update account information successfully"]);
             die();
         } else if ($action == "change_password") {
             $current_password = $request["current_password"];
             $new_password = $request["new_password"];
             $user = $this->mainModel->getUser($_SESSION['user_id']);
             if (!$user) {
-                echo json_encode(["status"=>"error", "message"=>"User is not defined"]);
+                echo json_encode(["status" => "error", "message" => "User is not defined"]);
                 die();
             }
             if (!password_verify($current_password, $user["password"])) {
-                echo json_encode(["status"=>"error", "message"=>"Current password is wrong"]);
+                echo json_encode(["status" => "error", "message" => "Current password is wrong"]);
                 die();
             }
             $this->mainModel->updateUser($_SESSION['user_id'], null, null, $new_password, null, null, null);
-            echo json_encode(["status"=>"success", "message"=>"Password is changed successfully"]);
+            echo json_encode(["status" => "success", "message" => "Password is changed successfully"]);
             die();
         } else {
-            echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+            echo json_encode(["status" => "error", "message" => "Undefined method"]);
             die();
         }
     }
@@ -324,5 +372,33 @@ class MainController
         $image_data = explode(";base64", $base64);
         $image_base64 = base64_decode($image_data[1]);
         file_put_contents($output, $image_base64);
+    }
+
+    public function generateCode()
+    {
+        $n = 5;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+        $randomString .= '-';
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+        return $randomString;
+    }
+
+    public function getNewCode()
+    {
+        $code = $this->generateCode();
+        $check_code = $this->mainModel->checkCode($code);
+        while ($check_code) {
+            $code = $this->generateCode();
+            $check_code = $this->mainModel->checkCode($code);
+        }
+        return $code;
     }
 }

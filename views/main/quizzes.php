@@ -32,29 +32,25 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <tr>
                         <th style="width: 10%">No</th>
                         <th style="width: 10%">Code</th>
-                        <th style="width: 10%">Question</th>
-                        <th style="width: 30%">Answer</th>
-                        <th style="width: 20%">Duration</th>
+                        <th style="width: 30%">Question</th>
+                        <th style="width: 10%">Duration (m)</th>
                         <th style="width: 20%">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php for ($i = 0; $i < count($quizzes); $i++) { ?>
-                        <tr id="quiz_<?php echo $quizzes[$i]['id']; ?>">
-                            <td class="quiz-id"><?php echo $quizzes[$i]['id']; ?></td>
-                            <td class="quiz-code"><?php echo $quizzes[$i]['code']; ?></td>
-                            <td class="quiz-question"><?php echo $quizzes[$i]['question']; ?></td>
-                            <td class="quiz-answer" data-content=`<?php echo $quizzes[$i]['answers']; ?>`>
-                                <?php
-                                $answers = json_decode($quizzes[$i]['answers']);
-                                for ($j = 0; $j < count($answers); $j++) { ?>
-                                    <div><?php echo $answers[$j]->name ?> (<?php if ($answers[$j]->flag == 1) echo "correct"; else echo "wrong"; ?>)</div>
-                                <?php }
-                                ?>
+                    <?php for ($i = 0; $i < count($new_quizzes); $i++) { ?>
+                        <tr id="quiz_<?php echo $new_quizzes[$i]->code; ?>">
+                            <td class="quiz-id"><?php echo $i + 1; ?></td>
+                            <td class="quiz-code"><?php echo $new_quizzes[$i]->code; ?></td>
+                            <td class="quiz-question">
+                                <?php for ($j = 0; $j < count($new_quizzes[$i]->questions); $j++) { ?>
+                                    <div><?php echo $new_quizzes[$i]->questions[$j]; ?></div>
+                                <?php } ?>
                             </td>
+                            <td class="quiz-duration"><?php echo $new_quizzes[$i]->total_duration; ?></td>
                             <td class="question-action">
-                                <button class="btn btn-warning btn-sm" onclick="editQuiz(<?php echo $quizzes[$i]['id']; ?>)">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="removeQuiz(<?php echo $quizzes[$i]['id']; ?>)">Remove</button>
+                                <button class="btn btn-warning btn-sm" onclick="editQuiz(<?php echo $new_quizzes[$i]->code; ?>)">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="removeQuiz(<?php echo $new_quizzes[$i]->code; ?>)">Remove</button>
                             </td>
                         </tr>
                     <?php } ?>
@@ -64,6 +60,51 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </section>
+<!-- add a question modal -->
+<div class="modal fade" id="modal_add_quiz" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Create a quiz</h4>
+            </div>
+            <div class="modal-body">
+                <form id="modal-add-quiz-form">
+                    <label>Questions</label>
+                    <div id="modal_add_questions_div">
+                        <div class="form-group question-item">
+                            <select class="form-control page-select" required>
+                                <?php for ($k = 0; $k < count($questions); $k++) { ?>
+                                    <option value="<?php echo $questions[$k]['id'] ?>"><?php echo $questions[$k]['question'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-link" onclick="addQuestionItem()">Add more question</button>
+                        <button type="button" class="btn btn-link" onclick="removeQuestionItem()">Remove one</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (m)</label>
+                        <input class="form-control" id="modal_add_quiz_duration" type="number" required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-link">Create a question</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="questions-select-hidden" style="display: none">
+    <div class="form-group question-item">
+        <select class="form-control page-select" required>
+            <?php for ($k = 0; $k < count($questions); $k++) { ?>
+                <option value="<?php echo $questions[$k]['id'] ?>"><?php echo $questions[$k]['question'] ?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
 <?php include(PREPEND_PATH . "views/partials/footer.php"); ?>
 <?php include(PREPEND_PATH . "views/partials/foot.php"); ?>
 <script>
@@ -79,6 +120,43 @@ include(PREPEND_PATH . "views/partials/header.php");
         });
         base_url = $('meta[name="_base_url"]').attr('content');
     });
+    function addQuestionItem() {
+        let html = $('#questions-select-hidden').html();
+        $('#modal_add_questions_div').append(html);
+    }
+    function removeQuestionItem() {
+        let questions_length = $('#modal_add_questions_div .question-item').length;
+        if (questions_length < 2) return;
+        $('#modal_add_questions_div .question-item:nth-child(' + questions_length +')').remove()
+    }
+    $('#modal-add-quiz-form').on('submit', function (e) {
+        e.preventDefault();
+        let questions = [];
+        $('#modal_add_questions_div .question-item').each(function (index, item) {
+            let item_id = $(item).find('select').val();
+            questions.push(item_id);
+        });
+        let duration = $('#modal_add_quiz_duration').val();
+        let data = {
+            action: "add_quiz_own",
+            questions: JSON.stringify(questions),
+            duration: duration,
+        };
+        $.ajax({
+            url: base_url + "/quizzes-own",
+            method: 'post',
+            data: data,
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") {
+                    customAlert(res.message, true);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
+                } else customAlert(res.message);
+            }
+        })
+    })
 </script>
 </body>
 </html>

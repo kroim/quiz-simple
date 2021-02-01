@@ -168,8 +168,39 @@ class MainModel
 
     public function getQuizzesByUser($user_id)
     {
-        $sql = "select A.id, A.code, A.question_id, B.question, B.answers, A.duration from quizzes as A left join questions as B on A.question_id = B.id where A.user_id = " . $user_id;
+        $sql = "select A.id, A.code, A.question_id, B.question, A.total_duration from quizzes as A left join questions as B on A.question_id = B.id where A.user_id = " . $user_id;
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function addQuiz($user_id, $code, $questions, $duration)
+    {
+        $created_at = date("Y-m-d H:i:s");
+        $updated_at = date("Y-m-d H:i:s");
+        $sql = "insert into quizzes (user_id, code, question_id, duration, total_duration, created_at, updated_at) values ";
+        for ($i = 0; $i < count($questions); $i++) {
+            if ($i > 0) $sql .= ", ";
+            $sql .= "(" . $user_id . ", '" . $code . "', " . $questions[$i] . ", 0, '" . $duration . "', '" . $created_at . "', '" . $updated_at . "')";
+        }
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function editQuiz($code, $questions, $duration)
+    {
+        $updated_at = date("Y-m-d H:i:s");
+        return false;
+    }
+
+    public function removeQuiz($code) {
+        $sql = "delete from quizzes where code='" . $code . "'";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function checkCode($code)
+    {
+        $sql = "select * from quizzes where code='" . $code . "'";
+        $select = mysqli_query($this->conn, $sql);
+        if (mysqli_num_rows($select)) return true;  // exist code already
+        return false;  // don't exist code
     }
 }

@@ -105,6 +105,11 @@ include(PREPEND_PATH . "views/partials/header.php");
             </div>
             <div class="modal-body">
                 <form id="modal-edit-quiz-form">
+                    <input type="hidden" id="modal_edit_quiz_id">
+                    <div class="form-group">
+                        <label>Code</label>
+                        <input type="text" class="form-control" id="modal_edit_quiz_code" readonly>
+                    </div>
                     <label>Questions</label>
                     <div id="modal_edit_questions_div">
                         <div class="form-group question-item">
@@ -160,10 +165,12 @@ include(PREPEND_PATH . "views/partials/header.php");
         </select>
     </div>
 </div>
+<input hidden class="_questions" value='<?= json_encode($questions); ?>'/>
 <?php include(PREPEND_PATH . "views/partials/footer.php"); ?>
 <?php include(PREPEND_PATH . "views/partials/foot.php"); ?>
 <script>
     let base_url = '';
+    let _questionArr = [];
     $(function () {
         $("#quiz-table").DataTable({
             aaSorting: [],
@@ -174,6 +181,7 @@ include(PREPEND_PATH . "views/partials/header.php");
             sDom: '<"dataTables__top"flB<"dataTables_actions">>rt<"dataTables__bottom"ip><"clear">',
         });
         base_url = $('meta[name="_base_url"]').attr('content');
+        _questionArr = JSON.parse($('._questions').val());
     });
     function addQuestionItem() {
         let html = $('#questions-select-hidden').html();
@@ -222,7 +230,25 @@ include(PREPEND_PATH . "views/partials/header.php");
         })
     });
     function editQuiz(id) {
-
+        $('#modal_edit_quiz_id').val(id);
+        let code = $('tr#quiz_' + id + ' .quiz-code').text();
+        $('#modal_edit_quiz_code').val(code);
+        let duration = $('tr#quiz_' + id + ' .quiz-duration').text();
+        $('#modal_edit_quiz_duration').val(duration);
+        let question_ids = $('tr#quiz_' + id + ' .quiz-question').attr('data-id').replace(/`/g, '');
+        question_ids = JSON.parse(question_ids);
+        $('#modal_edit_questions_div .question-item:nth-child(1) select').val(question_ids[0]);
+        for (let i = 1; i < question_ids.length; i++) {
+            let html = '<div class="form-group question-item"><select class="form-control page-select" required>';
+            for (let j = 0; j < _questionArr.length; j++) {
+                if (_questionArr[j].id == question_ids[i])
+                    html += '<option value="' + _questionArr[j].id +'" selected>' + _questionArr[j].question + '</option>';
+                else html += '<option value="' + _questionArr[j].id +'">' + _questionArr[j].question + '</option>';
+            }
+            html += '</select></div>';
+            $('#modal_edit_questions_div').append(html);
+        }
+        $('#modal_edit_quiz').modal();
     }
     function removeQuiz(id) {
         $('#modal_remove_quiz_id').val(id);

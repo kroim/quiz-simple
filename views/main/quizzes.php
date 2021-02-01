@@ -238,6 +238,12 @@ include(PREPEND_PATH . "views/partials/header.php");
         let question_ids = $('tr#quiz_' + id + ' .quiz-question').attr('data-id').replace(/`/g, '');
         question_ids = JSON.parse(question_ids);
         $('#modal_edit_questions_div .question-item:nth-child(1) select').val(question_ids[0]);
+        let questions_length = $('#modal_edit_questions_div .question-item').length;
+        if (questions_length > 1) {
+            for (let k = 1; k < questions_length; k++) {
+                $('#modal_edit_questions_div .question-item:nth-child(2)').remove()
+            }
+        }
         for (let i = 1; i < question_ids.length; i++) {
             let html = '<div class="form-group question-item"><select class="form-control page-select" required>';
             for (let j = 0; j < _questionArr.length; j++) {

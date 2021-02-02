@@ -54,7 +54,7 @@
                     </ul>
                 </li>
             <?php } ?>
-            <?php if ($_SESSION['user_role'] == 1 || $_SESSION['user_role'] == 3) { ?>
+            <?php if ($_SESSION['user_role'] == 3) { ?>
                 <li class="<?php if ($sidebar->menu == "tests") echo 'navigation__active'; ?>">
                     <a href="<?php echo $base_url; ?>/tests"><i class="zwicon-edit-pencil"></i> Tests</a>
                 </li>

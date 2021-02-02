@@ -31,6 +31,13 @@
                 <i class="zwicon-sign-out"></i><label>Logout</label>
             </a>
         </li>
+        <div class="clock d-none d-md-inline-block">
+            <div class="time">
+                <span class="time__hours">23</span>
+                <span class="time__min">27</span>
+                <span class="time__sec">23</span>
+            </div>
+        </div>
     </ul>
 
 </header>

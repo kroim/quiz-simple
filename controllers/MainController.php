@@ -241,6 +241,7 @@ class MainController
                 $index = array_search($id, $quiz_ids);
                 array_push($new_quizzes[$index]->question_ids, $quizzes[$i]['question_id']);
                 array_push($new_quizzes[$index]->questions, $quizzes[$i]['question']);
+                array_push($new_quizzes[$index]->durations, $quizzes[$i]['duration']);
             } else {
                 array_push($quiz_ids, $id);
                 $item = new stdClass();
@@ -248,7 +249,9 @@ class MainController
                 $item->code = $quizzes[$i]['code'];
                 $item->question_ids = array($quizzes[$i]['question_id']);
                 $item->questions = array($quizzes[$i]['question']);
+                $item->durations = array($quizzes[$i]['duration']);
                 $item->total_duration = $quizzes[$i]['total_duration'];
+                $item->total_duration_flag = $quizzes[$i]['total_duration_flag'];
                 $new_quizzes[] = $item;
             }
         }
@@ -262,9 +265,23 @@ class MainController
             case "add_quiz_all":
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
-                $duration = $request['duration'];
+                $total_duration_flag_string = $request['total_duration_flag'];
+                $total_duration_flag = 0;
+                $total_duration = 0;
+                $durations = array();
+                if ($total_duration_flag_string == "true") {
+                    $total_duration_flag = 1;
+                    $total_duration = $request['total_duration'];
+                } else {
+                    $durations_string = $request['durations'];
+                    $durations = json_decode($durations_string);
+                    if (count($questions) != count($durations)) {
+                        echo json_encode(["status" => "error", "message" => "Failed creating a quiz from durations"]);
+                        die();
+                    }
+                }
                 $code = $this->getNewCode();
-                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $duration);
+                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $durations, $total_duration, $total_duration_flag);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Created a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
                 break;
@@ -272,8 +289,21 @@ class MainController
                 $quiz_id = $request['quiz_id'];
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
-                $duration = $request['duration'];
-                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $duration);
+                $total_duration_flag = 0;
+                $total_duration = 0;
+                $durations = array();
+                if ($request['total_duration_flag'] == "true") {
+                    $total_duration_flag = 1;
+                    $total_duration = $request['total_duration'];
+                } else {
+                    $durations_string = $request['durations'];
+                    $durations = json_decode($durations_string);
+                    if (count($questions) != count($durations)) {
+                        echo json_encode(["status" => "error", "message" => "Failed creating a quiz from durations"]);
+                        die();
+                    }
+                }
+                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $durations, $total_duration, $total_duration_flag);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
                 break;
@@ -307,6 +337,7 @@ class MainController
                 $index = array_search($id, $quiz_ids);
                 array_push($new_quizzes[$index]->question_ids, $quizzes[$i]['question_id']);
                 array_push($new_quizzes[$index]->questions, $quizzes[$i]['question']);
+                array_push($new_quizzes[$index]->durations, $quizzes[$i]['duration']);
             } else {
                 array_push($quiz_ids, $id);
                 $item = new stdClass();
@@ -314,7 +345,9 @@ class MainController
                 $item->code = $quizzes[$i]['code'];
                 $item->question_ids = array($quizzes[$i]['question_id']);
                 $item->questions = array($quizzes[$i]['question']);
+                $item->durations = array($quizzes[$i]['duration']);
                 $item->total_duration = $quizzes[$i]['total_duration'];
+                $item->total_duration_flag = $quizzes[$i]['total_duration_flag'];
                 $new_quizzes[] = $item;
             }
         }
@@ -328,9 +361,23 @@ class MainController
             case "add_quiz_own":
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
-                $duration = $request['duration'];
+                $total_duration_flag_string = $request['total_duration_flag'];
+                $total_duration_flag = 0;
+                $total_duration = 0;
+                $durations = array();
+                if ($total_duration_flag_string == "true") {
+                    $total_duration_flag = 1;
+                    $total_duration = $request['total_duration'];
+                } else {
+                    $durations_string = $request['durations'];
+                    $durations = json_decode($durations_string);
+                    if (count($questions) != count($durations)) {
+                        echo json_encode(["status" => "error", "message" => "Failed creating a quiz from durations"]);
+                        die();
+                    }
+                }
                 $code = $this->getNewCode();
-                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $duration);
+                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $durations, $total_duration, $total_duration_flag);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Created a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
                 break;
@@ -338,8 +385,21 @@ class MainController
                 $quiz_id = $request['quiz_id'];
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
-                $duration = $request['duration'];
-                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $duration);
+                $total_duration_flag = 0;
+                $total_duration = 0;
+                $durations = array();
+                if ($request['total_duration_flag'] == "true") {
+                    $total_duration_flag = 1;
+                    $total_duration = $request['total_duration'];
+                } else {
+                    $durations_string = $request['durations'];
+                    $durations = json_decode($durations_string);
+                    if (count($questions) != count($durations)) {
+                        echo json_encode(["status" => "error", "message" => "Failed creating a quiz from durations"]);
+                        die();
+                    }
+                }
+                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $durations, $total_duration, $total_duration_flag);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
                 break;

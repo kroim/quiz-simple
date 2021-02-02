@@ -24,6 +24,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <thead>
                     <tr>
                         <th style="width: 5%">No</th>
+                        <th style="width: 10%">Avatar</th>
                         <th style="width: 20%">Name</th>
                         <th style="width: 35%">Email</th>
                         <th style="width: 10%">Role</th>
@@ -34,6 +35,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <?php for ($i = 0; $i < count($users); $i++) { ?>
                         <tr id="user_<?php echo $users[$i]['id']; ?>">
                             <td class="user-number"><?php echo $i + 1 ?></td>
+                            <td class="user-name"><img src="<?php echo $base_url . $users[$i]['avatar']; ?>" class="avatar-img"></td>
                             <td class="user-name"><?php echo $users[$i]['name']; ?></td>
                             <td class="user-email"><?php echo $users[$i]['email']; ?></td>
                             <td class="user-role"><?php if ($users[$i]['role'] == 2) echo "Teacher"; else echo "Student"; ?></td>

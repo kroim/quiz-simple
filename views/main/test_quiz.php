@@ -42,9 +42,9 @@ include(PREPEND_PATH . "views/partials/header.php");
                                 <?php $answers = json_decode($quiz->answers[$j]); ?>
                                 <?php for ($k = 0; $k < count($answers); $k++) { ?>
                                     <div class="form-group">
-                                        <div class="custom-control custom-checkbox mb-2">
-                                            <input type="checkbox" class="custom-control-input" id="answer_<?= $j ?>_<?= $k ?>">
-                                            <label class="custom-control-label" for="answer_<?= $j ?>_<?= $k ?>"><?= $answers[$k]->name ?></label>
+                                        <div class="custom-control custom-checkbox mb-2" data-id="answer-item">
+                                            <input type="checkbox" data-id="answer-flag" class="custom-control-input" id="answer_<?= $j ?>_<?= $k ?>">
+                                            <label class="custom-control-label" data-id="answer-name" for="answer_<?= $j ?>_<?= $k ?>"><?= $answers[$k]->name ?></label>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -101,9 +101,9 @@ include(PREPEND_PATH . "views/partials/header.php");
     let base_url = $('meta[name="_base_url"]').attr('content');
     let total_duration = '<?= $quiz->total_duration ?>';
     $(function () {
-        total_duration = parseInt(total_duration) - 8;
+        total_duration = parseInt(total_duration);
         let current_time = new Date();
-        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration)) - 50000;
+        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration));
         let targetTime = new Date(target_time).getTime() + 2000;
         let clock = setInterval(function () {
             let currentTime = new Date().getTime();
@@ -129,10 +129,38 @@ include(PREPEND_PATH . "views/partials/header.php");
         $('#modal_close_test').modal();
     }
     function timeExpireClose() {
-        // location.href = base_url;
+        submitTest();
+        location.href = base_url;
     }
     function submitTest() {
-
+        let quiz_id = $('#test-quiz-id').val();
+        let question_ids = JSON.parse('<?= json_encode($quiz->question_ids) ?>');
+        let answers = [];
+        $('.tab-pane').each(function (index, pane) {
+            let answer_item = [];
+            $(pane).find('div[data-id="answer-item"]').each(function (index1, item) {
+                let name = $(item).find('label[data-id="answer-name"]').text();
+                let flag = $(item).find('input[data-id="answer-flag"]').prop('checked')?1:0;
+                answer_item.push({name: name, flag: flag});
+            });
+            answers.push(answer_item);
+        });
+        let data = {
+            action: "submit_test_total",
+            quiz_id: quiz_id,
+            question_ids: JSON.stringify(question_ids),
+            answers: JSON.stringify(answers),
+        };
+        $.ajax({
+            url: base_url + "/tests",
+            method: 'post',
+            data: data,
+            success: function (res) {
+                res = JSON.parse(res);
+                if (res.status === "success") location.href = base_url;
+                else customAlert(res.message);
+            }
+        })
     }
 </script>
 </body>

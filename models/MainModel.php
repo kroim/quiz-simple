@@ -243,4 +243,41 @@ class MainModel
         if (mysqli_num_rows($select)) return true;  // exist code already
         return false;  // don't exist code
     }
+
+    public function openQuiz($student_id, $quiz_id)
+    {
+        $check_sql = "select * from tests where student_id = " . $student_id . " and quiz_id = " . $quiz_id;
+        $select = mysqli_query($this->conn, $check_sql);
+        if (mysqli_num_rows($select)) return false;
+        else {
+            $start_time = date("Y-m-d H:i:s");
+            $sql = "insert into tests (student_id, quiz_id, start_time, status) values (" . $student_id . ", " . $quiz_id . ", '" . $start_time . "', 2)";
+            return mysqli_query($this->conn, $sql);
+        }
+    }
+
+    public function submitTotalAnswers($quiz_id, $student_id, $question_ids, $answers)
+    {
+        $check_sql = "select * from tests where student_id = " . $student_id . " and quiz_id = " . $quiz_id;
+        $select = mysqli_query($this->conn, $check_sql);
+        if (mysqli_num_rows($select)) {
+            $test = $select->fetch_assoc();
+            $end_time = date("Y-m-d H:i:s");
+            $update_sql = "update tests set status = 3, end_time ='" . $end_time . "' where id = " . $test['id'];
+            $update_res = mysqli_query($this->conn, $update_sql);
+            if ($update_res) {
+                $insert_sql = "insert into answers (test_id, question_id, answers, status) values ";
+                for ($i = 0; $i < count($question_ids); $i++) {
+                    if ($i > 0) $insert_sql .= ", ";
+                    $insert_sql .= "(" . $test['id'] . ", " . $question_ids[$i] . ", '" . json_encode($answers[$i]) . "', 0)";
+                }
+                return mysqli_query($this->conn, $insert_sql);
+            } else return false;
+        } else return false;
+    }
+
+    public function submitItemAnswer($quiz_id, $student_id, $question_id, $answer)
+    {
+
+    }
 }

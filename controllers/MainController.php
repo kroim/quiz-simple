@@ -437,7 +437,7 @@ class MainController
         $code = $request['code'];
         $get_quiz = $this->mainModel->getQuizIdByCode($code);
         if (!$code || !$get_quiz) {
-            $quiz->status = 0; //0: not exist, 1: enable to start, 2: expired, 3: completed
+            $quiz->status = 0; //0: not exist, 1: enable to start, 2: started, 3: expired
         } else {
             $student_id = $_SESSION['user_id'];
             $quiz_id = $get_quiz['id'];
@@ -467,6 +467,7 @@ class MainController
                         array_push($quiz->durations, $item['duration']);
                     }
                 }
+                $this->mainModel->openQuiz($student_id, $quiz_id);
             }
         }
         require_once __DIR__ . "/../views/main/test_quiz.php";
@@ -474,6 +475,7 @@ class MainController
 
     public function postTestResult($request)
     {
+        $user_id = $_SESSION['user_id'];
         $action = $request['action'];
         switch ($action) {
             case "get_quiz":
@@ -487,8 +489,13 @@ class MainController
             case "submit_item_answer":
                 echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
                 break;
-            case "submit_total_answer":
-                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+            case "submit_test_total":
+                $quiz_id = $request['quiz_id'];
+                $question_ids = json_decode($request['question_ids']);
+                $answers = json_decode($request['answers']);
+                $query_res = $this->mainModel->submitTotalAnswers($quiz_id, $user_id, $question_ids, $answers);
+                if ($query_res) echo json_encode(["status"=>"error", "message"=>"Submitted a test successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed submitting a test"]);
                 break;
             default:
                 echo json_encode(["status"=>"error", "message"=>"Undefined method"]);

@@ -12,7 +12,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     <header class="content__title">
         <h1>Test</h1>
     </header>
-    <h5 class="card-subtitle text-center" style="font-size: 18px; font-weight: bold; font-style: oblique; color: orangered;">Do not close this browser, do not refresh after you started.</h5>
+    <h5 class="card-subtitle text-center" style="font-size: 18px; font-weight: bold; font-style: oblique; color: orangered;">Do not close this browser, Do not refresh this page</h5>
     <div class="card">
         <div class="card-body">
             <?php if ($quiz->status != 1) { ?>
@@ -36,7 +36,18 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <div class="tab-content">
                         <?php for ($j = 0; $j < count($quiz->question_ids); $j++) { ?>
                             <div class="tab-pane fade <?php if ($j == 0) echo 'active show'; ?>" id="problem_<?= $quiz->question_ids[$j] ?>" role="tabpanel">
-                                <h5><?= $quiz->questions[$j] ?></h5>
+                                <div class="form-group">
+                                    <h5><?= $quiz->questions[$j] ?></h5>
+                                </div>
+                                <?php $answers = json_decode($quiz->answers[$j]); ?>
+                                <?php for ($k = 0; $k < count($answers); $k++) { ?>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="answer_<?= $k ?>">
+                                            <label class="custom-control-label" for="answer_<?= $k ?>"><?= $answers[$k]->name ?></label>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -46,10 +57,59 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </section>
+<!-- confirm test modal -->
+<div class="modal fade" id="modal_confirm_quiz" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="zwicon-info-circle" style="font-size: 7rem"></i>
+                </div>
+                <div class="form-group">
+                    <h3>You can't stop testing after you start a test, Do not refresh and do not close browser.</h3>
+                </div>
+                <div class="form-group">
+                    <h5 class="text-center">There are <span id="problem_counts"></span> problems</h5>
+                </div>
+                <input type="hidden" id="modal_confirm_quiz_code">
+                <button type="button" class="btn btn-link" onclick="startTest()">Start Test</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include(PREPEND_PATH . "views/partials/footer.php"); ?>
 <?php include(PREPEND_PATH . "views/partials/foot.php"); ?>
 <script>
     let base_url = $('meta[name="_base_url"]').attr('content');
+    let total_duration = '<?= $quiz->total_duration ?>';
+    $(function () {
+        total_duration = parseInt(total_duration) - 8;
+        let current_time = new Date();
+        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration));
+        let targetTime = new Date(target_time).getTime() + 2000;
+        let clock = setInterval(function () {
+            let currentTime = new Date().getTime();
+            let distance = targetTime - currentTime;
+            let hours = Math.floor(distance / (1000 * 60 * 60));
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+            if (distance < 1) {
+                clearInterval(clock);
+            } else {
+                $('.test__hours').text(hours);
+                $('.test__min').text(minutes);
+                $('.test__sec').text(seconds);
+                $('#test_down_clock').css('display', 'block');
+            }
+        }, 500);
+    });
+
 </script>
 </body>
 </html>

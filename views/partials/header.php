@@ -31,7 +31,7 @@
                 <i class="zwicon-sign-out"></i><label>Logout</label>
             </a>
         </li>
-        <div class="clock d-none d-md-inline-block" id="test_down_clock" style="display: none;">
+        <div class="clock d-none d-md-inline-block" id="test_down_clock" style="display: none !important;">
             <div class="time">
                 <span class="test__hours">00</span>
                 <span class="test__min">00</span>

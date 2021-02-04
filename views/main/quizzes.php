@@ -266,10 +266,17 @@ include(PREPEND_PATH . "views/partials/header.php");
         let questions = [];
         let durations = [];
         if (total_duration_flag) {
+            let check_question_duration = true;
             $('#modal_add_questions_div .question-item').each(function (index, item) {
                 let item_id = $(item).find('select').val();
+                if (questions.indexOf(item_id) > -1) {
+                    customAlert("You can not repeat same question");
+                    check_question_duration = false;
+                    return;
+                }
                 questions.push(item_id);
             });
+            if (!check_question_duration) return;
         } else {
             let check_question_duration = true;
             $('#modal_add_questions_div .question-item').each(function (index, item) {
@@ -277,6 +284,11 @@ include(PREPEND_PATH . "views/partials/header.php");
                 let item_dur = $(item).find('input[type="number"]').val();
                 if (!item_dur || item_dur === "0") {
                     customAlert("Required each question's duration");
+                    check_question_duration = false;
+                    return;
+                }
+                if (questions.indexOf(item_id) > -1) {
+                    customAlert("You can not repeat same question");
                     check_question_duration = false;
                     return;
                 }
@@ -364,10 +376,17 @@ include(PREPEND_PATH . "views/partials/header.php");
         let questions = [];
         let durations = [];
         if (total_duration_flag) {
+            let check_question_duration = true;
             $('#modal_edit_questions_div .question-item').each(function (index, item) {
                 let item_id = $(item).find('select').val();
+                if (questions.indexOf(item_id) > -1) {
+                    customAlert("You can not repeat same question");
+                    check_question_duration = false;
+                    return;
+                }
                 questions.push(item_id);
             });
+            if (!check_question_duration) return;
         } else {
             let check_question_duration = true;
             $('#modal_edit_questions_div .question-item').each(function (index, item) {
@@ -375,6 +394,11 @@ include(PREPEND_PATH . "views/partials/header.php");
                 let item_dur = $(item).find('input[type="number"]').val();
                 if (!item_dur || item_dur === "0") {
                     customAlert("Required each question's duration");
+                    check_question_duration = false;
+                    return;
+                }
+                if (questions.indexOf(item_id) > -1) {
+                    customAlert("You can not repeat same question");
                     check_question_duration = false;
                     return;
                 }

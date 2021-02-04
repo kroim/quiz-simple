@@ -20,7 +20,7 @@ include(PREPEND_PATH . "views/partials/header.php");
             <?php } else { ?>
                 <h4 class="card-title">Problems</h4>
                 <div class="actions">
-                    <button class="btn btn-success">Submit Result</button>
+                    <button class="btn btn-success" onclick="$('#modal_confirm_submit').modal()">Submit Result</button>
                 </div>
                 <input hidden id="test-quiz-id" value="<?= $quiz->id ?>">
                 <input hidden id="test-quiz-code" value="<?= $quiz->code ?>">
@@ -43,8 +43,8 @@ include(PREPEND_PATH . "views/partials/header.php");
                                 <?php for ($k = 0; $k < count($answers); $k++) { ?>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-2">
-                                            <input type="checkbox" class="custom-control-input" id="answer_<?= $k ?>">
-                                            <label class="custom-control-label" for="answer_<?= $k ?>"><?= $answers[$k]->name ?></label>
+                                            <input type="checkbox" class="custom-control-input" id="answer_<?= $j ?>_<?= $k ?>">
+                                            <label class="custom-control-label" for="answer_<?= $j ?>_<?= $k ?>"><?= $answers[$k]->name ?></label>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -57,8 +57,8 @@ include(PREPEND_PATH . "views/partials/header.php");
         </div>
     </div>
 </section>
-<!-- confirm test modal -->
-<div class="modal fade" id="modal_confirm_quiz" tabindex="-1">
+<!-- confirm test submit modal -->
+<div class="modal fade" id="modal_confirm_submit" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header"></div>
@@ -67,14 +67,29 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <i class="zwicon-info-circle" style="font-size: 7rem"></i>
                 </div>
                 <div class="form-group">
-                    <h3>You can't stop testing after you start a test, Do not refresh and do not close browser.</h3>
-                </div>
-                <div class="form-group">
-                    <h5 class="text-center">There are <span id="problem_counts"></span> problems</h5>
+                    <h3>Are you sure to submit your test result?</h3>
                 </div>
                 <input type="hidden" id="modal_confirm_quiz_code">
-                <button type="button" class="btn btn-link" onclick="startTest()">Start Test</button>
+                <button type="button" class="btn btn-link" onclick="submitTest()">Submit Test</button>
                 <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- close test modal -->
+<div class="modal fade" id="modal_close_test" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <i class="zwicon-clock" style="font-size: 7rem; color: orangered;"></i>
+                </div>
+                <div class="form-group">
+                    <h3>Time is up !</h3>
+                </div>
+                <input type="hidden" id="modal_confirm_quiz_code">
+                <button type="button" class="btn btn-link" data-dismiss="modal" onclick="timeExpireClose()">Close</button>
             </div>
         </div>
     </div>
@@ -88,7 +103,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     $(function () {
         total_duration = parseInt(total_duration) - 8;
         let current_time = new Date();
-        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration));
+        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration)) - 50000;
         let targetTime = new Date(target_time).getTime() + 2000;
         let clock = setInterval(function () {
             let currentTime = new Date().getTime();
@@ -101,6 +116,7 @@ include(PREPEND_PATH . "views/partials/header.php");
             if (seconds < 10) seconds = "0" + seconds;
             if (distance < 1) {
                 clearInterval(clock);
+                timeExpire();
             } else {
                 $('.test__hours').text(hours);
                 $('.test__min').text(minutes);
@@ -109,7 +125,15 @@ include(PREPEND_PATH . "views/partials/header.php");
             }
         }, 500);
     });
+    function timeExpire() {
+        $('#modal_close_test').modal();
+    }
+    function timeExpireClose() {
+        // location.href = base_url;
+    }
+    function submitTest() {
 
+    }
 </script>
 </body>
 </html>

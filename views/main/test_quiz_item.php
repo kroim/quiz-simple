@@ -4,7 +4,7 @@ if (!defined('PREPEND_PATH')) define('PREPEND_PATH', '');
 include(PREPEND_PATH . "views/partials/head.php");
 include(PREPEND_PATH . "views/partials/header.php");
 ?>
-<link rel="stylesheet" href="<?= $base_url; ?>/public/common/css/tests.css">
+<link rel="stylesheet" href="<?= $base_url; ?>/public/common/css/test-item.css">
 <body data-sa-theme="10">
 <?php include(PREPEND_PATH . "views/partials/sidebar.php"); ?>
 <section class="content">

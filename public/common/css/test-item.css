@@ -1,0 +1,9 @@
+#quiz-code-form {
+    display: flex;
+}
+#modal_confirm_quiz .modal-body {
+    text-align: center;
+}
+#modal_confirm_submit .modal-body, #modal_close_test .modal-body {
+    text-align: center;
+}

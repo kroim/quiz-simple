@@ -426,10 +426,74 @@ class MainController
         require_once __DIR__ . "/../views/main/tests.php";
     }
 
+    public function manageTestQuiz($request)
+    {
+        $this->check_session();
+        $base_url = $this->base_url;
+        $sidebar = new stdClass();
+        $sidebar->menu = "tests";
+        $sidebar->sub_menu = "";
+        $quiz = new stdClass();
+        $code = $request['code'];
+        $get_quiz = $this->mainModel->getQuizIdByCode($code);
+        if (!$code || !$get_quiz) {
+            $quiz->status = 0; //0: not exist, 1: enable to start, 2: expired, 3: completed
+        } else {
+            $student_id = $_SESSION['user_id'];
+            $quiz_id = $get_quiz['id'];
+            $check_test = $this->mainModel->checkTestQuiz($student_id, $quiz_id);
+            if ($check_test) {
+                $quiz->status = 2;
+            } else {
+                $quiz->status = 1;
+                $query_res = $this->mainModel->getQuizByCode($request['code']);
+                for ($i = 0; $i < count($query_res); $i++) {
+                    $item = $query_res[$i];
+                    if ($i == 0) {
+                        $quiz->id = $item['id'];
+                        $quiz->code = $item['code'];
+                        $quiz->total_duration = $item['total_duration'];
+                        $quiz->total_duration_flag = $item['total_duration_flag'];
+                        $quiz->question_ids = array($item['question_id']);
+                        $quiz->questions = array($item['question']);
+                        $answer_item = str_replace('"flag":1', '"flag":0', $item['answers']);
+                        $quiz->answers = array($answer_item);
+                        $quiz->durations = array($item['duration']);
+                    } else {
+                        array_push($quiz->question_ids, $item['question_id']);
+                        array_push($quiz->questions, $item['question']);
+                        $answer_item = str_replace('"flag":1', '"flag":0', $item['answers']);
+                        array_push($quiz->answers, $answer_item);
+                        array_push($quiz->durations, $item['duration']);
+                    }
+                }
+            }
+        }
+        require_once __DIR__ . "/../views/main/test_quiz.php";
+    }
+
     public function postTestResult($request)
     {
         $action = $request['action'];
-        echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+        switch ($action) {
+            case "get_quiz":
+                $query_res = $this->mainModel->getQuizByCode($request['code']);
+                if (count($query_res) > 0) {
+                    echo json_encode(["status"=>"success", "message"=>"", "count"=>count($query_res)]);
+                } else {
+                    echo json_encode(["status"=>"error", "message"=>"Do not exist the quiz"]);
+                }
+                break;
+            case "submit_item_answer":
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+            case "submit_total_answer":
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+            default:
+                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+                break;
+        }
         die();
     }
 

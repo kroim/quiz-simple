@@ -99,6 +99,9 @@ class Routes
         $this->route->post("/tests", function () {
             $this->main->postTestResult($_REQUEST);
         });
+        $this->route->get("/test-quiz", function () {
+            $this->main->manageTestQuiz($_REQUEST);
+        });
         $this->route->get("/account", function () {
             $this->main->account();
         });

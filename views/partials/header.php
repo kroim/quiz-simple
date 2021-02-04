@@ -31,11 +31,11 @@
                 <i class="zwicon-sign-out"></i><label>Logout</label>
             </a>
         </li>
-        <div class="clock d-none d-md-inline-block">
+        <div class="clock d-none d-md-inline-block" id="test_down_clock" style="display: none;">
             <div class="time">
-                <span class="time__hours">23</span>
-                <span class="time__min">27</span>
-                <span class="time__sec">23</span>
+                <span class="test__hours">00</span>
+                <span class="test__min">00</span>
+                <span class="test__sec">00</span>
             </div>
         </div>
     </ul>

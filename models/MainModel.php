@@ -276,8 +276,21 @@ class MainModel
         } else return false;
     }
 
-    public function submitItemAnswer($quiz_id, $student_id, $question_id, $answer)
+    public function submitItemAnswer($quiz_id, $student_id, $question_id, $answer, $item_flag)
     {
-
+        $check_sql = "select * from tests where student_id = " . $student_id . " and quiz_id = " . $quiz_id;
+        $select = mysqli_query($this->conn, $check_sql);
+        if (mysqli_num_rows($select)) {
+            $test = $select->fetch_assoc();
+            $end_time = date("Y-m-d H:i:s");
+            $status = 2;
+            if ($item_flag == '1') $status = 3;
+            $update_sql = "update tests set status = " . $status . ", end_time ='" . $end_time . "' where id = " . $test['id'];
+            $update_res = mysqli_query($this->conn, $update_sql);
+            if ($update_res) {
+                $insert_sql = "insert into answers (test_id, question_id, answers, status) values (" . $test['id'] . ", " . $question_id . ", '" . $answer . "', 0)";
+                return mysqli_query($this->conn, $insert_sql);
+            } else return false;
+        } else return false;
     }
 }

@@ -470,7 +470,11 @@ class MainController
                 $this->mainModel->openQuiz($student_id, $quiz_id);
             }
         }
-        require_once __DIR__ . "/../views/main/test_quiz.php";
+        if ($quiz->status == 1 && $quiz->total_duration_flag == 1) {
+            require_once __DIR__ . "/../views/main/test_quiz.php";
+        } else {
+            require_once __DIR__ . "/../views/main/test_quiz_item.php";
+        }
     }
 
     public function postTestResult($request)
@@ -486,8 +490,14 @@ class MainController
                     echo json_encode(["status"=>"error", "message"=>"Do not exist the quiz"]);
                 }
                 break;
-            case "submit_item_answer":
-                echo json_encode(["status"=>"error", "message"=>"Undefined method"]);
+            case "submit_test_item":
+                $quiz_id = $request['quiz_id'];
+                $question_id = $request['question_id'];
+                $answer = $request['answer'];
+                $item_flag = $request['item_flag'];
+                $query_res = $this->mainModel->submitItemAnswer($quiz_id, $user_id, $question_id, $answer, $item_flag);
+                if ($query_res) echo json_encode(["status"=>"error", "message"=>"Submitted a test successfully"]);
+                else echo json_encode(["status"=>"error", "message"=>"Failed submitting a test"]);
                 break;
             case "submit_test_total":
                 $quiz_id = $request['quiz_id'];

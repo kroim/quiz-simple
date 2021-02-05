@@ -33,6 +33,67 @@ class MainController
         $sidebar = new stdClass();
         $sidebar->menu = "dashboard";
         $sidebar->sub_menu = "";
+        $tests = array();
+        if ($_SESSION['user_role'] == 1) {
+            $query_res = $this->mainModel->getAllTests();
+            $ids = array();
+            for ($j = 0; $j < count($query_res); $j++) {
+                $item = new stdClass();
+                $id = $query_res[$j]['id'];
+                if (in_array($id, $ids)) {
+                    $index = array_search($id, $ids);
+                    array_push($tests[$index]->questions, $query_res[$j]['question']);
+                    array_push($tests[$index]->answers, $query_res[$j]['answers']);
+                } else {
+                    array_push($ids, $id);
+                    $item->id = $query_res[$j]['id'];
+                    $item->name = $query_res[$j]['name'];
+                    $item->email = $query_res[$j]['email'];
+                    $item->questions = array($query_res[$j]['question']);
+                    $item->answers = array($query_res[$j]['answers']);
+                    $tests[] = $item;
+                }
+            }
+        }
+        else if ($_SESSION['user_role'] == 2) {
+            $query_res = $this->mainModel->getTestsByTeacher($_SESSION['user_id']);
+            $ids = array();
+            for ($j = 0; $j < count($query_res); $j++) {
+                $item = new stdClass();
+                $id = $query_res[$j]['id'];
+                if (in_array($id, $ids)) {
+                    $index = array_search($id, $ids);
+                    array_push($tests[$index]->questions, $query_res[$j]['question']);
+                    array_push($tests[$index]->answers, $query_res[$j]['answers']);
+                } else {
+                    array_push($ids, $id);
+                    $item->id = $query_res[$j]['id'];
+                    $item->name = $query_res[$j]['name'];
+                    $item->email = $query_res[$j]['email'];
+                    $item->questions = array($query_res[$j]['question']);
+                    $item->answers = array($query_res[$j]['answers']);
+                    $tests[] = $item;
+                }
+            }
+        } else {
+            $query_res = $this->mainModel->getTestsByStudent($_SESSION['user_id']);
+            $ids = array();
+            for ($j = 0; $j < count($query_res); $j++) {
+                $item = new stdClass();
+                $id = $query_res[$j]['id'];
+                if (in_array($id, $ids)) {
+                    $index = array_search($id, $ids);
+                    array_push($tests[$index]->questions, $query_res[$j]['question']);
+                    array_push($tests[$index]->answers, $query_res[$j]['answers']);
+                } else {
+                    array_push($ids, $id);
+                    $item->id = $query_res[$j]['id'];
+                    $item->questions = array($query_res[$j]['question']);
+                    $item->answers = array($query_res[$j]['answers']);
+                    $tests[] = $item;
+                }
+            }
+        }
         require_once __DIR__ . '/../views/main/home.php';
     }
 
@@ -496,7 +557,7 @@ class MainController
                 $answer = $request['answer'];
                 $item_flag = $request['item_flag'];
                 $query_res = $this->mainModel->submitItemAnswer($quiz_id, $user_id, $question_id, $answer, $item_flag);
-                if ($query_res) echo json_encode(["status"=>"error", "message"=>"Submitted a test successfully"]);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Submitted a test successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed submitting a test"]);
                 break;
             case "submit_test_total":
@@ -504,7 +565,7 @@ class MainController
                 $question_ids = json_decode($request['question_ids']);
                 $answers = json_decode($request['answers']);
                 $query_res = $this->mainModel->submitTotalAnswers($quiz_id, $user_id, $question_ids, $answers);
-                if ($query_res) echo json_encode(["status"=>"error", "message"=>"Submitted a test successfully"]);
+                if ($query_res) echo json_encode(["status"=>"success", "message"=>"Submitted a test successfully"]);
                 else echo json_encode(["status"=>"error", "message"=>"Failed submitting a test"]);
                 break;
             default:

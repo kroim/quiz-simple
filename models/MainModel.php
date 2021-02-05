@@ -286,4 +286,27 @@ class MainModel
             } else return false;
         } else return false;
     }
+
+    public function getAllTests()
+    {
+        $sql = "select A.id, D.name, D.email, C.question, B.answers from tests as A left join answers as B on A.id = B.test_id left join questions as C on B.question_id = C.id left join users as D on A.student_id = D.id";
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getTestsByTeacher($teacher_id)
+    {
+        $sql = "select A.id, D.name, D.email, C.question, B.answers from tests as A left join answers as B on A.id = B.test_id  "
+            . "left join questions as C on B.question_id = C.id left join users as D on A.student_id = D.id left join quizzes as E on A.quiz_id = E.id "
+            . "where E.user_id = " . $teacher_id;
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getTestsByStudent($student_id)
+    {
+        $sql = "select A.id, C.question, B.answers from tests as A left join answers as B on A.id = B.test_id left join questions as C on B.question_id = C.id where A.student_id = " . $student_id;
+        $select = mysqli_query($this->conn, $sql);
+        return $select->fetch_all(MYSQLI_ASSOC);
+    }
 }

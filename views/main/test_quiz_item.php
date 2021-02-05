@@ -141,7 +141,6 @@ include(PREPEND_PATH . "views/partials/header.php");
             let nav_class = $(nav).attr('class');
             if (nav_class.indexOf('active') > -1) active_index = index;
         });
-        console.log(active_index);
         submitTest(active_index);
         if (active_index < durations.length - 1) {
             let next_child = active_index + 1;

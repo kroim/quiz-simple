@@ -293,7 +293,6 @@ include(PREPEND_PATH . "views/partials/header.php");
         let sub_category = $('tr#question_' + id + ' .question-sub-category').attr('data-id');
         let name = $('tr#question_' + id + ' .question-name').text();
         let answers_content = $('tr#question_' + id + ' .question-answers').attr('data-content').replace(/`/g, "");
-        console.log(category, sub_category, name, answers_content);
         let answers = JSON.parse(answers_content);
         $('#modal_edit_question_id').val(id);
         $('#modal_edit_question_category').val(category);
@@ -365,7 +364,6 @@ include(PREPEND_PATH . "views/partials/header.php");
         })
     });
     function removeQuestion(id) {
-        console.log("remove question: ", id);
         $('#modal_remove_question_id').val(id);
         $('#modal_remove_question').modal();
     }

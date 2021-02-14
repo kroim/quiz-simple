@@ -126,7 +126,10 @@ include(PREPEND_PATH . "views/partials/header.php");
         }
     }
     let current_time = new Date();
-    let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + parseInt(durations[0])));
+    let duration_item_splits = durations[0].split(":");
+    let target_time = new Date(current_time.setHours(new Date(current_time).getHours() + parseInt(duration_item_splits[0])));
+    target_time = new Date(target_time.setMinutes(target_time.getMinutes() + parseInt(duration_item_splits[1])));
+    target_time = new Date(target_time.setSeconds(target_time.getSeconds() + parseInt(duration_item_splits[2])));
     let targetTime = new Date(target_time).getTime() + 2000;
     let clock = setInterval(function () {
         if (!clock_func(targetTime)) {
@@ -150,7 +153,10 @@ include(PREPEND_PATH . "views/partials/header.php");
             $($('.tab-pane')[next_child]).addClass('active').addClass('show');
             clearInterval(clock);
             current_time = new Date();
-            target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + parseInt(durations[next_child])));
+            duration_item_splits = durations[next_child].split(":");
+            target_time = new Date(current_time.setHours(new Date(current_time).getHours() + parseInt(duration_item_splits[0])));
+            target_time = new Date(target_time.setMinutes(target_time.getMinutes() + parseInt(duration_item_splits[1])));
+            target_time = new Date(target_time.setSeconds(target_time.getSeconds() + parseInt(duration_item_splits[2])));
             targetTime = new Date(target_time).getTime() + 2000;
             clock = setInterval(function () {
                 if (!clock_func(targetTime)) {

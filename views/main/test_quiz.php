@@ -101,9 +101,11 @@ include(PREPEND_PATH . "views/partials/header.php");
     let base_url = $('meta[name="_base_url"]').attr('content');
     let total_duration = '<?= $quiz->total_duration ?>';
     $(function () {
-        total_duration = parseInt(total_duration);
+        let duration_splits = total_duration.split(":");
         let current_time = new Date();
-        let target_time = new Date(new Date(current_time).setMinutes(new Date(current_time).getMinutes() + total_duration));
+        let target_time = new Date(current_time.setHours(new Date(current_time).getHours() + parseInt(duration_splits[0])));
+        target_time = new Date(target_time.setMinutes(target_time.getMinutes() + parseInt(duration_splits[1])));
+        target_time = new Date(target_time.setSeconds(target_time.getSeconds() + parseInt(duration_splits[2])));
         let targetTime = new Date(target_time).getTime() + 2000;
         let clock = setInterval(function () {
             let currentTime = new Date().getTime();

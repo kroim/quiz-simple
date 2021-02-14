@@ -552,7 +552,17 @@ class MainController
             case "get_quiz":
                 $query_res = $this->mainModel->getQuizByCode($request['code']);
                 if (count($query_res) > 0) {
-                    echo json_encode(["status"=>"success", "message"=>"", "count"=>count($query_res)]);
+                    $query_item = $query_res[0];
+                    $created_at = $query_item['created_at'];
+                    $activate_splits = explode(":", $query_item['activate_duration']);
+                    $duration_string = "+" . $activate_splits[0] . " hours +" . $activate_splits[1] ." minutes +" . $activate_splits[2] . " seconds";
+                    $updated_at = date('Y-m-d H:i:s', strtotime($duration_string, strtotime($created_at)));
+                    $current_date = date("Y-m-d H:i:s");
+                    if ($current_date > $updated_at) {
+                        echo json_encode(["status"=>"error", "message"=>"The test is expired"]);
+                    } else {
+                        echo json_encode(["status"=>"success", "message"=>"", "count"=>count($query_res)]);
+                    }
                 } else {
                     echo json_encode(["status"=>"error", "message"=>"Do not exist the quiz"]);
                 }

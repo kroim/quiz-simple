@@ -63,6 +63,9 @@ include(PREPEND_PATH . "views/partials/header.php");
                     $('#modal_confirm_quiz_code').val(code);
                     $('#problem_counts').text(res.count);
                     $('#modal_confirm_quiz').modal();
+                    setTimeout(function () {
+                        startTest()
+                    }, 5000);
                 } else customAlert(res.message);
             }
         })

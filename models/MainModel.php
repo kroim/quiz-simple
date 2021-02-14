@@ -156,7 +156,7 @@ class MainModel
 
     public function getQuizByCode($code)
     {
-        $sql = "select A.id, A.code, C.id as question_id, C.question as question, C.answers as answers, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id where A.code = '" . $code . "'";
+        $sql = "select A.id, A.code, A.activate_duration, A.created_at, C.id as question_id, C.question as question, C.answers as answers, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id where A.code = '" . $code . "'";
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
     }

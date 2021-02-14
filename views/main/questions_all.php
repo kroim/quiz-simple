@@ -44,13 +44,13 @@ include(PREPEND_PATH . "views/partials/header.php");
                 <table id="question-table" class="table table-bordered">
                     <thead>
                     <tr>
-                        <th style="width: 10%">No</th>
+                        <th style="width: 5%">No</th>
                         <th style="width: 10%">Category</th>
                         <th style="width: 10%">Sub-Category</th>
-                        <th style="width: 30%">Problem</th>
-                        <th style="width: 20%">Answers</th>
+                        <th style="width: 25%">Problem</th>
+                        <th style="width: 35%">Answers</th>
                         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1) { ?>
-                            <th style="width: 20%">Actions</th>
+                            <th style="width: 15%">Actions</th>
                         <?php } ?>
                     </tr>
                     </thead>

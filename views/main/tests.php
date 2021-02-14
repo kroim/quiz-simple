@@ -24,7 +24,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     </div>
 </section>
 <!-- confirm test modal -->
-<div class="modal fade" id="modal_confirm_quiz" tabindex="-1">
+<div class="modal fade" id="modal_confirm_quiz" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header"></div>
@@ -39,8 +39,6 @@ include(PREPEND_PATH . "views/partials/header.php");
                     <h5 class="text-center">There are <span id="problem_counts"></span> problems</h5>
                 </div>
                 <input type="hidden" id="modal_confirm_quiz_code">
-                <button type="button" class="btn btn-link" onclick="startTest()">Start Test</button>
-                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

@@ -404,6 +404,7 @@ class MainController
                 $item = new stdClass();
                 $item->id = $id;
                 $item->code = $quizzes[$i]['code'];
+                $item->activate_duration = $quizzes[$i]['activate_duration'];
                 $item->question_ids = array($quizzes[$i]['question_id']);
                 $item->questions = array($quizzes[$i]['question']);
                 $item->durations = array($quizzes[$i]['duration']);
@@ -421,6 +422,7 @@ class MainController
         switch ($action) {
             case "add_quiz_own":
                 $questions_string = $request['questions'];
+                $activate_duration = $request['activate_duration'];
                 $questions = json_decode($questions_string);
                 $total_duration_flag_string = $request['total_duration_flag'];
                 $total_duration_flag = 0;
@@ -438,12 +440,13 @@ class MainController
                     }
                 }
                 $code = $this->getNewCode();
-                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $durations, $total_duration, $total_duration_flag);
+                $query_res = $this->mainModel->addQuiz($_SESSION['user_id'], $code, $questions, $durations, $total_duration, $total_duration_flag, $activate_duration);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Created a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed creating a quiz"]);
                 break;
             case "edit_quiz_own":
                 $quiz_id = $request['quiz_id'];
+                $activate_duration = $request['activate_duration'];
                 $questions_string = $request['questions'];
                 $questions = json_decode($questions_string);
                 $total_duration_flag = 0;
@@ -460,7 +463,7 @@ class MainController
                         die();
                     }
                 }
-                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $durations, $total_duration, $total_duration_flag);
+                $query_res = $this->mainModel->editQuiz($quiz_id, $questions, $durations, $total_duration, $total_duration_flag, $activate_duration);
                 if ($query_res) echo json_encode(["status" => "success", "message" => "Updated a quiz successfully"]);
                 else echo json_encode(["status" => "error", "message" => "Failed updating a quiz"]);
                 break;

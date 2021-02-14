@@ -33,11 +33,12 @@ include(PREPEND_PATH . "views/partials/header.php");
                 <table id="quiz-table" class="table table-bordered">
                     <thead>
                     <tr>
-                        <th style="width: 10%">No</th>
+                        <th style="width: 5%">No</th>
                         <th style="width: 10%">Code</th>
+                        <th style="width: 10%">Activate Time</th>
                         <th style="width: 30%">Question (duration)</th>
-                        <th style="width: 10%">Total Duration (m)</th>
-                        <th style="width: 20%">Actions</th>
+                        <th style="width: 10%">Total Duration</th>
+                        <th style="width: 15%">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                         <tr id="quiz_<?php echo $new_quizzes[$i]->id; ?>">
                             <td class="quiz-id"><?php echo $i + 1; ?></td>
                             <td class="quiz-code"><?php echo $new_quizzes[$i]->code; ?></td>
+                            <td class="quiz-activate-duration"><?php echo $new_quizzes[$i]->activate_duration; ?></td>
                             <td class="quiz-question" data-id=`<?php echo json_encode($new_quizzes[$i]->question_ids); ?>`
                                 data-duration=`<?php echo json_encode($new_quizzes[$i]->durations); ?>`>
                                 <?php for ($j = 0; $j < count($new_quizzes[$i]->questions); $j++) { ?>
@@ -73,9 +75,13 @@ include(PREPEND_PATH . "views/partials/header.php");
             </div>
             <div class="modal-body">
                 <form id="modal-add-quiz-form">
+                    <div class="form-group">
+                        <label>Activate Time</label>
+                        <input type="text" class="form-control input-mask" id="modal_add_activate_duration" data-mask="00:00:00" placeholder="eg: 02:45:41" required>
+                    </div>
                     <div class="row">
                         <div class="col-sm-9"><label>Questions</label></div>
-                        <div class="col-sm-3"><label>Duration (m)</label></div>
+                        <div class="col-sm-3"><label>Duration</label></div>
                     </div>
                     <div id="modal_add_questions_div">
                         <div class="form-group question-item">
@@ -88,7 +94,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="number" class="form-control">
+                                    <input type="text" class="form-control input-mask" data-mask="00:00:00" placeholder="eg: 02:45:41">
                                 </div>
                             </div>
                         </div>
@@ -97,7 +103,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                         <button type="button" class="btn btn-link" onclick="addQuestionItem()">Add more question</button>
                         <button type="button" class="btn btn-link" onclick="removeQuestionItem()">Remove one</button>
                     </div>
-                    <label>Total Duration (m)</label>
+                    <label>Total Duration</label>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-4">
@@ -107,7 +113,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <input class="form-control" id="modal_add_quiz_total_duration" placeholder="Total duration" type="number" style="display: none;">
+                                <input class="form-control input-mask" id="modal_add_quiz_total_duration" data-mask="00:00:00" placeholder="eg: 02:45:41" type="text" style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -122,7 +128,7 @@ include(PREPEND_PATH . "views/partials/header.php");
 </div>
 <!-- edit a question modal -->
 <div class="modal fade" id="modal_edit_quiz" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4>Edit a quiz</h4>
@@ -134,9 +140,13 @@ include(PREPEND_PATH . "views/partials/header.php");
                         <label>Code</label>
                         <input type="text" class="form-control" id="modal_edit_quiz_code" readonly>
                     </div>
+                    <div class="form-group">
+                        <label>Activate Time</label>
+                        <input type="text" class="form-control input-mask" data-mask="00:00:00" id="modal_edit_activate_duration" placeholder="eg: 02:45:41" required>
+                    </div>
                     <div class="row">
                         <div class="col-sm-9"><label>Questions</label></div>
-                        <div class="col-sm-3"><label>Duration (m)</label></div>
+                        <div class="col-sm-3"><label>Duration</label></div>
                     </div>
                     <div id="modal_edit_questions_div">
                         <div class="form-group question-item">
@@ -149,7 +159,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="number" class="form-control">
+                                    <input type="text" class="form-control input-mask" data-mask="00:00:00" placeholder="eg: 02:45:41">
                                 </div>
                             </div>
                         </div>
@@ -158,7 +168,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                         <button type="button" class="btn btn-link" onclick="addEditQuestionItem()">Add more question</button>
                         <button type="button" class="btn btn-link" onclick="removeEditQuestionItem()">Remove one</button>
                     </div>
-                    <label>Total Duration (m)</label>
+                    <label>Total Duration</label>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-4">
@@ -168,7 +178,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <input class="form-control" id="modal_edit_quiz_total_duration" placeholder="Total duration" type="number" style="display: none;">
+                                <input class="form-control input-mask" data-mask="00:00:00" id="modal_edit_quiz_total_duration" placeholder="eg: 02:45:41" type="text" style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -211,7 +221,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                 </select>
             </div>
             <div class="col-sm-3">
-                <input type="number" class="form-control">
+                <input type="text" class="form-control input-mask" data-mask="00:00:00" placeholder="eg: 02:45:41">
             </div>
         </div>
     </div>
@@ -237,6 +247,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     function addQuestionItem() {
         let html = $('#questions-select-hidden').html();
         $('#modal_add_questions_div').append(html);
+        $('#modal_add_questions_div input[data-mask="00:00:00"]:last').mask('00:00:00');
     }
     function removeQuestionItem() {
         let questions_length = $('#modal_add_questions_div .question-item').length;
@@ -246,6 +257,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     function addEditQuestionItem() {
         let html = $('#questions-select-hidden').html();
         $('#modal_edit_questions_div').append(html);
+        $('#modal_edit_questions_div input[data-mask="00:00:00"]:last').mask('00:00:00');
     }
     function removeEditQuestionItem() {
         let questions_length = $('#modal_edit_questions_div .question-item').length;
@@ -262,6 +274,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     });
     $('#modal-add-quiz-form').on('submit', function (e) {
         e.preventDefault();
+        let activate_duration = $('#modal_add_activate_duration').val();
         let total_duration_flag = $('#modal_add_quiz_total_duration_option').prop('checked');
         let questions = [];
         let durations = [];
@@ -281,7 +294,7 @@ include(PREPEND_PATH . "views/partials/header.php");
             let check_question_duration = true;
             $('#modal_add_questions_div .question-item').each(function (index, item) {
                 let item_id = $(item).find('select').val();
-                let item_dur = $(item).find('input[type="number"]').val();
+                let item_dur = $(item).find('input').val();
                 if (!item_dur || item_dur === "0") {
                     customAlert("Required each question's duration");
                     check_question_duration = false;
@@ -307,6 +320,7 @@ include(PREPEND_PATH . "views/partials/header.php");
         }
         let data = {
             action: "add_quiz_own",
+            activate_duration: activate_duration,
             questions: JSON.stringify(questions),
             total_duration_flag: total_duration_flag,
             durations: JSON.stringify(durations),
@@ -331,6 +345,8 @@ include(PREPEND_PATH . "views/partials/header.php");
         $('#modal_edit_quiz_id').val(id);
         let code = $('tr#quiz_' + id + ' .quiz-code').text();
         $('#modal_edit_quiz_code').val(code);
+        let activate_time = $('tr#quiz_' + id + ' .quiz-activate-duration').text();
+        $('#modal_edit_activate_duration').val(activate_time);
         let data_flag = $('tr#quiz_' + id + ' .quiz-duration').attr('data-flag');
         if (data_flag === "1") {
             let duration = $('tr#quiz_' + id + ' .quiz-duration').text();
@@ -363,7 +379,7 @@ include(PREPEND_PATH . "views/partials/header.php");
                     html += '<option value="' + _questionArr[j].id +'">' + _questionArr[j].question + '</option>';
                 }
             }
-            html += '</select></div><div class="col-sm-3"><input type="number" class="form-control" value="' +
+            html += '</select></div><div class="col-sm-3"><input type="text" class="form-control input-mask" data-mask="00:00:00" value="' +
                 question_durations[i] +'"></div></div></div>';
             $('#modal_edit_questions_div').append(html);
         }
@@ -372,6 +388,7 @@ include(PREPEND_PATH . "views/partials/header.php");
     $('#modal-edit-quiz-form').on('submit', function (e) {
         e.preventDefault();
         let quiz_id = $('#modal_edit_quiz_id').val();
+        let quiz_activate_duration = $('#modal_edit_activate_duration').val();
         let total_duration_flag = $('#modal_edit_quiz_total_duration_option').prop('checked');
         let questions = [];
         let durations = [];
@@ -391,7 +408,7 @@ include(PREPEND_PATH . "views/partials/header.php");
             let check_question_duration = true;
             $('#modal_edit_questions_div .question-item').each(function (index, item) {
                 let item_id = $(item).find('select').val();
-                let item_dur = $(item).find('input[type="number"]').val();
+                let item_dur = $(item).find('input').val();
                 if (!item_dur || item_dur === "0") {
                     customAlert("Required each question's duration");
                     check_question_duration = false;
@@ -418,6 +435,7 @@ include(PREPEND_PATH . "views/partials/header.php");
         let data = {
             action: "edit_quiz_own",
             quiz_id: quiz_id,
+            activate_duration: quiz_activate_duration,
             questions: JSON.stringify(questions),
             total_duration_flag: total_duration_flag,
             durations: JSON.stringify(durations),

@@ -177,16 +177,16 @@ class MainModel
 
     public function getQuizzesByUser($user_id)
     {
-        $sql = "select A.id, A.code, C.id as question_id, C.question as question, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id where A.user_id = " . $user_id . " order by id ASC";
+        $sql = "select A.id, A.code, A.activate_duration, C.id as question_id, C.question as question, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id where A.user_id = " . $user_id . " order by id ASC";
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function addQuiz($user_id, $code, $questions, $durations, $total_duration, $total_duration_flag)
+    public function addQuiz($user_id, $code, $questions, $durations, $total_duration, $total_duration_flag, $activate_duration)
     {
         $created_at = date("Y-m-d H:i:s");
         $updated_at = date("Y-m-d H:i:s");
-        $sql = "insert into quizzes (user_id, code, total_duration, total_duration_flag, created_at, updated_at) values (" . $user_id . ", '" . $code . "', " . $total_duration . ", " . $total_duration_flag . ", '" . $created_at . "', '" . $updated_at . "')";
+        $sql = "insert into quizzes (user_id, code, total_duration, total_duration_flag, activate_duration, created_at, updated_at) values (" . $user_id . ", '" . $code . "', '" . $total_duration . "', " . $total_duration_flag . ", '" . $activate_duration . "', '" . $created_at . "', '" . $updated_at . "')";
         mysqli_query($this->conn, $sql);
         $insert_id = mysqli_insert_id($this->conn);
         if ($insert_id >= 0) {
@@ -194,17 +194,17 @@ class MainModel
             for ($i = 0; $i < count($questions); $i++) {
                 if ($i > 0) $sql1 .= ", ";
                 if (!$total_duration_flag) {
-                    $sql1 .= "(" . $insert_id . ", " . $questions[$i] . ", " . $durations[$i] . ")";
+                    $sql1 .= "(" . $insert_id . ", " . $questions[$i] . ", '" . $durations[$i] . "')";
                 } else $sql1 .= "(" . $insert_id . ", " . $questions[$i] . ", 0)";
             }
             return mysqli_query($this->conn, $sql1);
         } else return false;
     }
 
-    public function editQuiz($id, $questions, $durations, $total_duration, $total_duration_flag)
+    public function editQuiz($id, $questions, $durations, $total_duration, $total_duration_flag, $activate_duration)
     {
         $updated_at = date("Y-m-d H:i:s");
-        $sql = "update quizzes set total_duration=" . $total_duration . ", total_duration_flag=" . $total_duration_flag . ", updated_at='" . $updated_at . "' where id=" . $id;
+        $sql = "update quizzes set total_duration='" . $total_duration . "', total_duration_flag=" . $total_duration_flag . ", activate_duration='" . $activate_duration . "', updated_at='" . $updated_at . "' where id=" . $id;
         $query_res = mysqli_query($this->conn, $sql);
         if ($query_res) {
             $sql_remove = "delete from quiz_question where quiz_id=" . $id;
@@ -213,7 +213,7 @@ class MainModel
             for ($i = 0; $i < count($questions); $i++) {
                 if ($i > 0) $sql_add .= ", ";
                 if (!$total_duration_flag) {
-                    $sql_add .= "(" . $id . ", " . $questions[$i] . ", " . $durations[$i] . ")";
+                    $sql_add .= "(" . $id . ", " . $questions[$i] . ", '" . $durations[$i] . "')";
                 } else $sql_add .= "(" . $id . ", " . $questions[$i] . ", 0)";
             }
             return mysqli_query($this->conn, $sql_add);

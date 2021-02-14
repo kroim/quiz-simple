@@ -10,16 +10,13 @@ include(PREPEND_PATH."views/partials/head.php");
     <div class="login__block active" id="l-login">
         <div class="login__block__header">
             <i class="zwicon-user-circle"></i>
-            Hi there! Please Sign in
+            Login
 
             <div class="actions actions--inverse login__block__actions">
-                <div class="dropdown">
-                    <i data-toggle="dropdown" class="zwicon-more-h actions__item"></i>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?php echo $base_url ?>/register">Create an account</a>
-<!--                        <a class="dropdown-item" href="--><?php //echo $base_url ?><!--/forgot-password">Forgot password?</a>-->
-                    </div>
+                <div class="text-right">
+                    <a href="<?php echo $base_url ?>/register">
+                        <i class="zwicon-plus"></i> Register
+                    </a>
                 </div>
             </div>
         </div>
@@ -33,7 +30,7 @@ include(PREPEND_PATH."views/partials/head.php");
                 <input type="password" class="form-control" id="login_password" placeholder="Password" required>
             </div>
 
-            <button type="submit" class="btn btn-theme btn--icon"><i class="zwicon-checkmark"></i></button>
+            <button type="submit" class="btn btn-success">Login</button>
         </form>
     </div>
 

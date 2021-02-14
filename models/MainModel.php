@@ -149,7 +149,7 @@ class MainModel
 
     public function getAllQuizzes()
     {
-        $sql = "select A.id, A.code, C.id as question_id, C.question as question, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id order by id ASC";
+        $sql = "select A.id, A.code, A.activate_duration, C.id as question_id, C.question as question, B.duration as duration, A.total_duration, A.total_duration_flag from quizzes as A left join quiz_question as B on A.id = B.quiz_id left join questions as C on B.question_id = C.id order by id ASC";
         $select = mysqli_query($this->conn, $sql);
         return $select->fetch_all(MYSQLI_ASSOC);
     }
